@@ -116,7 +116,12 @@ body {
 
 .bernays .conclusion {
   margin-left: 30px;
-  text-align: center;
+}
+
+.bernays .conclusion > div {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .bernays .menu {

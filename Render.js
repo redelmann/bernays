@@ -2,7 +2,7 @@ import {pretty} from './Printer.js';
 
 export function goalToHTML(subtree) {
   const goalDiv = document.createElement('div');
-  goalDiv.classList.add("goal");
+  goalDiv.classList.add("goal", "draggable");
   goalDiv.appendChild(document.createTextNode(pretty(subtree.goal)));
   goalDiv.bernays = { tree: subtree };
   return goalDiv;
@@ -10,7 +10,7 @@ export function goalToHTML(subtree) {
 
 export function assumptionToHTML(subtree) {
   const assumptionDiv = document.createElement('div');
-  assumptionDiv.classList.add("assumption");
+  assumptionDiv.classList.add("assumption", "draggable");
   assumptionDiv.appendChild(document.createTextNode("[" + pretty(subtree.assumption) + "]"));
   return assumptionDiv;
 }
@@ -46,17 +46,22 @@ export function treeToHTML(tree) {
   treeDiv.appendChild(middleDiv);
 
   const nameDiv = document.createElement('div');
-  nameDiv.classList.add("name");
+  nameDiv.classList.add("name", "draggable");
   nameDiv.appendChild(document.createTextNode(tree.rule.name));
   middleDiv.appendChild(nameDiv);
 
   const barDiv = document.createElement('div');
-  barDiv.classList.add("bar");
+  barDiv.classList.add("bar", "draggable");
   middleDiv.appendChild(barDiv);
 
   const conclusionDiv = document.createElement('div');
   conclusionDiv.classList.add("conclusion");
-  conclusionDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
+
+  const conclusionInnerDiv = document.createElement('div');
+  conclusionInnerDiv.classList.add("draggable");
+  conclusionInnerDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
+
+  conclusionDiv.appendChild(conclusionInnerDiv);
   treeDiv.appendChild(conclusionDiv);
 
   return treeDiv;

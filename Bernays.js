@@ -127,7 +127,7 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
 
 function addGoal(expr) {
   const exDiv = goalToHTML({ goal: expr });
-  exDiv.classList.add("main", "draggable");
+  exDiv.classList.add("main");
   container.appendChild(exDiv);
   const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
   const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
@@ -158,9 +158,21 @@ const dragMoveListeners = {
 const dragMoveModifiers = [];
 
 interact('.bernays .draggable').draggable({
+  manualStart: true,
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
   autoScroll: true
+}).on('move', function (event) {
+  var interaction = event.interaction;
+  if (interaction.pointerIsDown && !interaction.interacting()) {
+    var elem = event.currentTarget;
+    while (elem && !elem.classList.contains("main")) {
+      elem = elem.parentNode;
+    }
+    if (elem) {
+      interaction.start({ name: 'drag' }, event.interactable, elem);
+    }
+  }
 });
 
 interact('.bernays .goal:not(.current .goal)').dropzone({
@@ -197,7 +209,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
         event.target.remove();
         contextDiv.appendChild(newDiv);
         if (!parentTree) {
-          newDiv.classList.add("main", "draggable");
+          newDiv.classList.add("main");
           newDiv.setAttribute('data-x', x);
           newDiv.setAttribute('data-y', y);
           newDiv.style.left = x + 'px';
@@ -264,7 +276,7 @@ interact('.bernays .menu .item').draggable({
   var interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule));
-    elem.classList.add("main", "draggable");
+    elem.classList.add("main");
     container.appendChild(elem);
 
     const y = container.offsetHeight - event.currentTarget.offsetTop - event.currentTarget.offsetHeight;
