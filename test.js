@@ -261,7 +261,7 @@ interact('.bernays .goal').on('doubletap', function(event) {
       const parentTree = tree.parent;
       console.assert(parentTree, "Parent of discharged goal was not set.");
       const assumptionTree = { assumption: tree.goal, parent: parentTree };
-      replaceInTree(parentTree, tree, assumptionTree);
+      updateSubtree(parentTree, tree, assumptionTree);
       const assumptionDiv = assumptionToHTML(assumptionTree);
       event.target.remove();
       contextDiv.appendChild(assumptionDiv);
