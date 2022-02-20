@@ -11,6 +11,34 @@ const container = document.getElementById("bernays");
 
 const UI = initUI(container);
 
+function newGoalDialogHTML(onValidate, onCancel) {
+  const dialogDiv = document.createElement("div");
+  dialogDiv.classList.add("dialog");
+
+  const exprInput = exprInputHTML();
+  dialogDiv.appendChild(exprInput);
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.classList.add("controls");
+
+  const confirmButton = document.createElement("a");
+  confirmButton.classList.add("confirm");
+  confirmButton.appendChild(document.createTextNode("Appliquer"));
+  confirmButton.addEventListener("click", function(event) {
+    if (!exprInput.bernays.is_valid) {
+      exprInput.focus();
+      return;
+    }
+    
+    onValidate(exprInput.bernays.expr);
+  });
+
+  controlsDiv.appendChild(confirmButton);
+  dialogDiv.appendChild(controlsDiv);
+
+  return dialogDiv;
+}
+
 function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
@@ -268,6 +296,16 @@ interact('.bernays .goal').on('doubletap', function(event) {
       break;
     }
   }
+});
+
+interact('.bernays .new-goal').on('click', function(event) {
+  UI.showModal();
+  const dialogDiv = newGoalDialogHTML(function(expr) {
+    UI.hideModal();
+    dialogDiv.remove();
+    addGoal(expr);
+  });
+  container.appendChild(dialogDiv);
 });
 
 function getParameter(name) {

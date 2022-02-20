@@ -8,6 +8,16 @@ export function initUI(container, options) {
   menuDiv.classList.add("menu");
   container.appendChild(menuDiv);
 
+  const newGoalDiv = document.createElement("div");
+  newGoalDiv.classList.add("new-goal");
+
+  const plusIcon = document.createElement("i");
+  plusIcon.classList.add("fa", "fa-plus");
+
+  newGoalDiv.appendChild(plusIcon);
+  menuDiv.appendChild(newGoalDiv);
+
+
   for (const rule of rules) {
     const itemDiv = document.createElement("div");
     itemDiv.bernays = { rule: rule };
@@ -41,8 +51,14 @@ export function exprInputHTML(defaultExpr) {
   const exprInput = document.createElement("input");
   exprInput.classList.add("expr-input");
   exprInput.setAttribute("type", "text");
-  exprInput.setAttribute("value", pretty(defaultExpr));
-  exprInput.bernays = { expr: defaultExpr, is_valid: true };
+  if (defaultExpr) {
+    exprInput.setAttribute("value", pretty(defaultExpr));
+    exprInput.bernays = { expr: defaultExpr, is_valid: true };
+  }
+  else {
+    exprInput.setAttribute("value", "");
+    exprInput.bernays = { expr: null, is_valid: false };
+  }
   exprInput.addEventListener("change", function(event) {
     try {
       const tokens = tokenize(exprInput.value);
