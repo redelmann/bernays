@@ -29,6 +29,7 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 1;
+  pointer-events: none;
 }
 
 .bernays .main {
@@ -57,6 +58,7 @@ body {
   justify-content: space-between;
   align-items: flex-end;
   gap: 30px;
+  pointer-events: none;
 }
 
 .bernays .hypotheses > :only-child {
@@ -116,6 +118,7 @@ body {
 
 .bernays .conclusion {
   margin-left: 30px;
+  pointer-events: none;
 }
 
 .bernays .conclusion > div {
@@ -156,6 +159,7 @@ body {
 
 .bernays .draggable {
   cursor: move;
+  pointer-events: auto;
 }
 
 .bernays .menu :first-child {
