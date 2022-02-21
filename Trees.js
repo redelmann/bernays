@@ -24,9 +24,7 @@ export function replaceInTree(tree, replacements) {
     hypotheses: tree.hypotheses.map(function(hypothesis) {
       return replaceInTree(hypothesis, replacements);
     }),
-    discharges: tree.discharges.map(function(expr) {
-      return replace(expr, replacements);
-    })
+    discharge: replace(tree.discharge, replacements)
   };
 }
 
@@ -65,10 +63,10 @@ export function freeVariablesInTree(tree) {
         res.add(extra);
       }
 
-      for (const expr of subtree.discharges) {
-        const exprExtras = freeVariables(expr);
-        for (const exprExtra of exprExtras) {
-          res.add(exprExtra);
+      if (subtree.discharge) {
+        const dischargeExtras = freeVariables(subtree.discharge);
+        for (const dischargeExtra of dischargeExtras) {
+          res.add(dischargeExtra);
         }
       }
 
@@ -87,7 +85,7 @@ export function ruleToTree(rule) {
     rule: rule,
     conclusion:rule.conclusion,
     hypotheses: rule.hypotheses.map(function(h) { return { goal: h }; }),
-    discharges: rule.discharges.map(function(x) { return x; })
+    discharge: rule.discharge
   };
   setParents(tree);
   return tree;
@@ -106,8 +104,8 @@ export function getContextDischarges(tree) {
   const res = [];
   while ('parent' in current) {
     current = current.parent;
-    for (const discharge of current.discharges) {
-      res.push(discharge);
+    if (current.discharge) {
+      res.push(current.discharge);
     }
   }
   return res;

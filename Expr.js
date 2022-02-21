@@ -92,6 +92,10 @@ export function not(expr) {
 
 
 export function replace(within, replacements) {
+    if (!within) {
+        return within;
+    }
+
     switch (within.kind) {
         case "Variable": {
             if (within.name in replacements) {
