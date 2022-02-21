@@ -1,4 +1,4 @@
-import {replace, freeVariables} from './Expr.js';
+import {replace, freeVariables, exprEqual} from './Expr.js';
 
 export function setParents(tree) {
   if (!('hypotheses' in tree)) {
@@ -38,6 +38,42 @@ export function updateSubtree(tree, old_subtree, new_subtree) {
       new_subtree.parent = tree;
     }
   }
+}
+
+export function updateUndischargedAssumptions(tree) {
+  function go(tree, exprs) {
+    if ('assumption' in tree) {
+      return;
+    }
+    else if ('goal' in tree) {
+      return;
+    }
+    else {
+      var newExprs = exprs;
+      if (tree.discharge) {
+        newExprs = newExprs.slice();
+        newExprs.push(tree.discharge);
+      }
+      for (var i = 0; i < tree.hypotheses.length; i++) {
+        go(tree.hypotheses[i], newExprs);
+        if ('assumption' in tree.hypotheses[i]) {
+          var ok = false;
+          const assumption = tree.hypotheses[i].assumption;
+          for (const expr of newExprs) {
+            if (exprEqual(expr, assumption)) {
+              ok = true;
+              break;
+            }
+          }
+          if (!ok) {
+            tree.hypotheses[i] = { goal: assumption, parent: tree };
+          }
+        }
+      }
+    }
+  }
+
+  go(tree, []);
 }
 
 export function freeVariablesInTree(tree) {

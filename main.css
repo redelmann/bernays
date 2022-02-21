@@ -108,8 +108,13 @@ body {
   filter: brightness(1.3);
 }
 
+.bernays .goal .pad {
+  visibility: hidden;
+}
+
 .bernays .assumption {
   background: #C0ECCC;
+  pointer-events: auto;
 }
 
 .bernays .middle {
@@ -198,7 +203,7 @@ body {
   filter: brightness(1.3);
 }
 
-.bernays .draggable {
+.bernays .conclusion > div, .bernays .goal.main {
   cursor: move;
   pointer-events: auto;
 }

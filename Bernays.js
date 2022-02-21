@@ -3,7 +3,7 @@ import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {pretty} from './Printer.js';
 import {trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, implI, implE, notNotE, tnd, rules} from './Rules.js';
-import {setParents, replaceInTree, freeVariablesInTree, updateSubtree, ruleToTree, getContextDischarges} from './Trees.js'; 
+import {setParents, replaceInTree, freeVariablesInTree, updateSubtree, ruleToTree, getContextDischarges, updateUndischargedAssumptions} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML} from './Render.js';
 import {initUI, exprInputHTML} from './UI.js';
 
@@ -161,7 +161,7 @@ const dragMoveListeners = {
 
 const dragMoveModifiers = [];
 
-interact('.bernays .draggable').draggable({
+interact('.bernays .main.tree > .conclusion > div, .bernays .goal.main').draggable({
   manualStart: true,
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
@@ -177,6 +177,65 @@ interact('.bernays .draggable').draggable({
       interaction.start({ name: 'drag' }, event.interactable, elem);
     }
   }
+});
+
+interact('.bernays .conclusion:not(.main > .conclusion) > div').draggable({
+  manualStart: true,
+  listeners: dragMoveListeners,
+  modifiers: dragMoveModifiers,
+  autoScroll: true
+}).on('move', function (event) {
+  var interaction = event.interaction;
+  if (interaction.pointerIsDown && !interaction.interacting()) {
+    var elem = event.currentTarget;
+    while (elem && !elem.classList.contains("tree")) {
+      elem = elem.parentNode;
+    }
+    if (elem) {
+      const tree = elem.bernays.tree;
+      const expr = tree.conclusion;
+      const goal = { goal: expr, parent: tree.parent };
+
+      var x = 0;
+      var y = container.offsetHeight-elem.offsetHeight;
+
+      var current = elem;
+      while (current !== container) {
+        x += current.offsetLeft;
+        y -= current.offsetTop;
+        current = current.offsetParent;
+      }
+
+      updateSubtree(tree.parent, tree, goal);
+      tree.parent = null;
+
+      updateUndischargedAssumptions(tree);
+
+      const goalDiv = goalToHTML(goal);
+      elem.parentNode.replaceChild(goalDiv, elem);
+
+      const newDiv = treeToHTML(tree);
+      newDiv.classList.add("main");
+
+      container.appendChild(newDiv);
+
+      newDiv.setAttribute('data-x', x);
+      newDiv.setAttribute('data-y', y);
+      newDiv.style.left = x + 'px';
+      newDiv.style.bottom = y + 'px';
+
+      interaction.start({ name: 'drag' }, event.interactable, newDiv);
+    }
+  }
+});
+
+interact('.bernays .assumption').on('doubletap', function (event) {
+  const assumptionTree = event.target.bernays.tree;
+  const expr = assumptionTree.assumption;
+  const goalTree = { goal: expr, parent: assumptionTree.parent };
+  const goalDiv = goalToHTML(goalTree);
+  updateSubtree(assumptionTree.parent, assumptionTree, goalTree);
+  event.target.parentNode.replaceChild(goalDiv, event.target);
 });
 
 interact('.bernays .goal:not(.current .goal)').dropzone({
