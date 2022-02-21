@@ -23,7 +23,7 @@ function newGoalDialogHTML(onValidate, onCancel) {
 
   const confirmButton = document.createElement("a");
   confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Appliquer"));
+  confirmButton.appendChild(document.createTextNode("Ajouter"));
   confirmButton.addEventListener("click", function(event) {
     if (!exprInput.bernays.is_valid) {
       exprInput.focus();
