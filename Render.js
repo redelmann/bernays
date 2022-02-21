@@ -55,12 +55,13 @@ export function treeToHTML(tree) {
   middleDiv.appendChild(barDiv);
 
   if (tree.discharge) {
-  	treeDiv.classList.add("has-discharge");
-  	const dischargeDiv = document.createElement('div');
-  	dischargeDiv.classList.add("discharge");
-  	dischargeDiv.bernays = { expr: tree.discharge, scopeDiv: hypothesesDiv, treeDiv: treeDiv };
-  	dischargeDiv.appendChild(document.createTextNode("H"));
-  	middleDiv.appendChild(dischargeDiv);
+    treeDiv.classList.add("has-discharge");
+    const dischargeDiv = document.createElement('div');
+    dischargeDiv.classList.add("discharge");
+
+    dischargeDiv.bernays = { expr: tree.discharge, scopeDiv: hypothesesDiv, treeDiv: treeDiv };
+    dischargeDiv.appendChild(document.createTextNode("H"));
+    middleDiv.appendChild(dischargeDiv);
   }
 
   const conclusionDiv = document.createElement('div');

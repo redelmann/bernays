@@ -30,6 +30,8 @@ body {
   flex-direction: column;
   z-index: 1;
   pointer-events: none;
+  overflow: visible;
+  position: relative;
 }
 
 .bernays .main {
@@ -83,6 +85,10 @@ body {
   padding: var(--border-radius);
   border: var(--border-size) solid transparent;
   border-radius: var(--border-radius);
+}
+
+.bernays .assumption.current {
+  width: fit-content;
 }
 
 .bernays .goal {
