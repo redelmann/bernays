@@ -97,7 +97,7 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
     tableElem.appendChild(rowElem);
   });
 
-  replDiv.bernays = { initFocus() { exprInputs[0][1].focus(); } };
+  replDiv.bernays = { initFocus() { exprInputs[0][1].select(); } };
 
   const controlsDiv = document.createElement("div");
   controlsDiv.classList.add("controls");
