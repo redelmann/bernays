@@ -50,6 +50,10 @@ body {
   filter: none;
 }
 
+.bernays .has-current {
+  z-index: 5;
+}
+
 .bernays .hypotheses {
   margin-left: 30px;
   display: flex;
@@ -59,6 +63,15 @@ body {
   align-items: flex-end;
   gap: 30px;
   pointer-events: none;
+  margin-bottom: 5px;
+  margin-bottom: 2px;
+  padding: 2px;
+  border: 3px solid transparent;
+  border-radius: var(--border-radius);
+}
+
+.bernays .hypotheses.active-scope {
+  border: 3px dashed gray;
 }
 
 .bernays .hypotheses > :only-child {
@@ -100,6 +113,8 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  height: 4px;
+  overflow-y: visible;
 }
 
 .bernays .name {
@@ -116,7 +131,27 @@ body {
   flex-grow: 1;
 }
 
+.bernays .discharge {
+  width: 50px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  cursor: move;
+  text-align: center;
+  background: white;
+  margin-left: 10px;
+  border-radius: var(--border-radius);
+  touch-action: none;
+  user-select: none;
+  filter: var(--shadow-filter);
+  pointer-events: auto;
+}
+
+.bernays .has-discharge > .hypotheses, .bernays .has-discharge > .conclusion {
+  margin-right: 60px;
+}
+
 .bernays .conclusion {
+  margin-top: 5px;
   margin-left: 30px;
   pointer-events: none;
 }
@@ -146,6 +181,7 @@ body {
   touch-action: none;
   user-select: none;
   filter: var(--shadow-filter);
+  pointer-events: auto;
 }
 
 .bernays .menu .new-goal {
