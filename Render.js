@@ -60,7 +60,9 @@ export function treeToHTML(tree) {
     dischargeDiv.classList.add("discharge");
 
     dischargeDiv.bernays = { expr: tree.discharge, scopeDiv: hypothesesDiv, treeDiv: treeDiv };
-    dischargeDiv.appendChild(document.createTextNode("H"));
+    const iconDiv = document.createElement("i");
+    iconDiv.classList.add("fa", "fa-star-o");
+    dischargeDiv.appendChild(iconDiv);
     middleDiv.appendChild(dischargeDiv);
   }
 
