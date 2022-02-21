@@ -18,6 +18,8 @@ function newGoalDialogHTML(onValidate, onCancel) {
   const exprInput = exprInputHTML();
   dialogDiv.appendChild(exprInput);
 
+  dialogDiv.bernays = { initFocus() { exprInput.focus(); } };
+
   const controlsDiv = document.createElement("div");
   controlsDiv.classList.add("controls");
 
@@ -94,6 +96,8 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
     rowElem.appendChild(exprElem);
     tableElem.appendChild(rowElem);
   });
+
+  replDiv.bernays = { initFocus() { exprInputs[0][1].focus(); } };
 
   const controlsDiv = document.createElement("div");
   controlsDiv.classList.add("controls");
@@ -244,6 +248,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           });
           UI.showModal();
           container.appendChild(dialog);
+          dialog.bernays.initFocus();
         }
         else {
           update(replacements);
@@ -374,6 +379,7 @@ interact('.bernays .new-goal').on('click', function(event) {
     addGoal(expr);
   });
   container.appendChild(dialogDiv);
+  dialogDiv.bernays.initFocus();
 });
 
 function getParameter(name) {
