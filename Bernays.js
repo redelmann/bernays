@@ -99,12 +99,12 @@ interact('.bernays .conclusion:not(.main > .conclusion) > div').draggable({
     while (!mainDiv.classList.contains("main")) {
       mainDiv = mainDiv.parentNode;
     }
-    var dx = elem.offsetWidth;
+    var dx = mainDiv.offsetWidth;
 
     const goalDiv = goalToHTML(goal);
     elem.parentNode.replaceChild(goalDiv, elem);
 
-    dx -= goalDiv.offsetWidth;
+    dx -= mainDiv.offsetWidth;
     dx /= 2;
     moveMainDiv(mainDiv, dx, 0);
 
@@ -181,26 +181,29 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
             updateSubtree(parentTree, event.target.bernays.tree, newSubtree);
           }
           const newDiv = treeToHTML(newSubtree);
+
+          var mainDiv = event.target;
+          while (!mainDiv.classList.contains("main")) {
+            mainDiv = mainDiv.parentNode;
+          }
+
           const contextDiv = event.target.parentNode;
           const x = parseFloat(event.target.getAttribute('data-x')) || 0;
           const y = parseFloat(event.target.getAttribute('data-y')) || 0;
-          var dx = event.target.offsetWidth;
+          var dx = mainDiv.offsetWidth;
           event.relatedTarget.remove();
           event.target.remove();
           contextDiv.appendChild(newDiv);
-          var mainDiv = newDiv;
           if (!parentTree) {
             newDiv.classList.add("main");
+            mainDiv = newDiv;
             moveMainDiv(newDiv, x, y);
             dx -= 30;
             if (newSubtree.discharge) {
               dx += 60;
             }
           }
-          while (!mainDiv.classList.contains("main")) {
-            mainDiv = mainDiv.parentNode;
-          }
-          dx -= newDiv.offsetWidth;
+          dx -= mainDiv.offsetWidth;
           dx /= 2;
           moveMainDiv(mainDiv, dx, 0);
         }

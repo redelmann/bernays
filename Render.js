@@ -82,9 +82,19 @@ export function treeToHTML(tree) {
   const conclusionDiv = document.createElement('div');
   conclusionDiv.classList.add("conclusion");
 
-  const conclusionInnerDiv = document.createElement('div');
-  conclusionInnerDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
+  const leftPad = document.createElement('span');
+  leftPad.appendChild(document.createTextNode('['));
+  leftPad.classList.add('pad');
+  const rightPad = document.createElement('span');
+  rightPad.appendChild(document.createTextNode(']'));
+  rightPad.classList.add('pad');
 
+  const conclusionInnerDiv = document.createElement('div');
+
+  conclusionInnerDiv.appendChild(leftPad);
+  conclusionInnerDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
+  conclusionInnerDiv.appendChild(rightPad);
+  
   conclusionDiv.appendChild(conclusionInnerDiv);
   treeDiv.appendChild(conclusionDiv);
 
