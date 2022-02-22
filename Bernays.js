@@ -178,16 +178,28 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           const contextDiv = event.target.parentNode;
           const x = parseFloat(event.target.getAttribute('data-x')) || 0;
           const y = parseFloat(event.target.getAttribute('data-y')) || 0;
+          var dx = event.target.offsetWidth;
           event.relatedTarget.remove();
           event.target.remove();
           contextDiv.appendChild(newDiv);
+          var mainDiv = newDiv;
           if (!parentTree) {
             newDiv.classList.add("main");
             newDiv.setAttribute('data-x', x);
             newDiv.setAttribute('data-y', y);
             newDiv.style.left = x + 'px';
             newDiv.style.bottom = y + 'px';
+            dx -= 30;
           }
+          while (!mainDiv.classList.contains("main")) {
+            mainDiv = mainDiv.parentNode;
+          }
+          dx -= newDiv.offsetWidth;
+          dx /= 2;
+          var mainDivX = parseFloat(mainDiv.getAttribute('data-x')) || 0;
+          mainDivX += dx;
+          mainDiv.setAttribute('data-x', mainDivX);
+          mainDiv.style.left = mainDivX + 'px';
         }
 
         const freeVars = freeMetaVariablesInTree(dragTree);
