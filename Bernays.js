@@ -309,7 +309,7 @@ interact('.bernays :not(.current) .discharge').draggable({
       event.target.remove();
     }
   },
-  modifiers: dragMoveModifiers,
+  modifiers: [],
   autoScroll: true
 }).on('move', function (event) {
   var interaction = event.interaction;
