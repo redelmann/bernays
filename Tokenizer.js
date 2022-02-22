@@ -1,16 +1,16 @@
 
 const token_classes = [
-  { re: /^\s+/, tag: "SPACE" },
-  { re: /^true|vrai/, tag: "TRUE" },
-  { re: /^false|faux/, tag: "FALSE" },
-  { re: /^[a-zA-Z]+/, tag: "ID" },
-  { re: /^\?[a-zA-Z]+/, tag: "META_ID" },
-  { re: /^&|⋀/, tag: "AND"},
-  { re: /^\||⋁/, tag: "OR"},
-  { re: /^=>|⇒/, tag: "IMPLIES"},
-  { re: /^\~|¬/, tag: "NOT"},
-  { re: /^\(/, tag: "OPEN" },
-  { re: /^\)/, tag: "CLOSE" }
+  { re: /^(\s+)/, tag: "SPACE" },
+  { re: /^(true|vrai)/, tag: "TRUE" },
+  { re: /^(false|faux)/, tag: "FALSE" },
+  { re: /^([a-zA-Z]+)/, tag: "ID" },
+  { re: /^(\?[a-zA-Z]+)/, tag: "META_ID" },
+  { re: /^(&|⋀)/, tag: "AND"},
+  { re: /^(\||⋁)/, tag: "OR"},
+  { re: /^(=>|⇒)/, tag: "IMPLIES"},
+  { re: /^(\~|¬)/, tag: "NOT"},
+  { re: /^(\()/, tag: "OPEN" },
+  { re: /^(\))/, tag: "CLOSE" }
 ];
 
 export function tokenize(string) {
@@ -22,7 +22,7 @@ export function tokenize(string) {
     
     token_classes.forEach(function(token_class) {
       const res = current.match(token_class.re);
-      if (res != null && res.length == 1) {
+      if (res != null) {
         const match = res[0];
         const match_length = match.length;
         if (max_length == null || match_length > max_length) {
