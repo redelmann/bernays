@@ -3,7 +3,7 @@ export function pretty(expression) {
 
     function prettyAtom(expr) {
         switch (expr.kind) {
-            case "Variable": {
+            case "MetaVariable": {
                 return expr.name;
             }
             case "Constant": {
@@ -53,5 +53,5 @@ export function pretty(expression) {
         return prettyBinary(expr, "Implies", "⇒", prettyDisjunction);
     }
 
-    return prettyExpr(expression)
+    return prettyExpr(expression);
 }

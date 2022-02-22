@@ -1,9 +1,9 @@
-import {constant, and, or, implies, not, variable, fuse, replace, freeVariables, exprEqual} from './Expr.js';
+import {constant, and, or, implies, not, metaVariable, fuse, replace, freeMetaVariables, exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {pretty} from './Printer.js';
 import {trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, implI, implE, notNotE, tnd, rules} from './Rules.js';
-import {setParents, replaceInTree, freeVariablesInTree, updateSubtree, ruleToTree, getContextDischarges, updateUndischargedAssumptions} from './Trees.js'; 
+import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, getContextDischarges, updateUndischargedAssumptions} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML} from './Render.js';
 import {initUI, exprInputHTML} from './UI.js';
 
@@ -89,7 +89,7 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
     const exprElem = document.createElement("td");
     exprElem.classList.add("expr");
 
-    const exprInput = exprInputHTML(variable(varName));
+    const exprInput = exprInputHTML(metaVariable(varName));
     exprInputs.push([varName, exprInput]);
 
     exprElem.appendChild(exprInput);
@@ -295,7 +295,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           }
         }
 
-        const freeVars = freeVariablesInTree(dragTree);
+        const freeVars = freeMetaVariablesInTree(dragTree);
         for (const handled in replacements) {
           freeVars.delete(handled);
         }

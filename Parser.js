@@ -1,4 +1,4 @@
-import {constant, ands, ors, impliess, not, variable} from './Expr.js';
+import {constant, ands, ors, impliess, not, metaVariable} from './Expr.js';
 
 export class ParseError extends Error {
     constructor(code, ...params) {
@@ -31,7 +31,7 @@ export function parse(input) {
         }
         const token = consume("ID");
         if (token) {
-            return variable(token.content);
+            return metaVariable(token.content);
         }
         return null;
     }

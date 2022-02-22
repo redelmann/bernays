@@ -1,4 +1,4 @@
-import {replace, freeVariables, exprEqual} from './Expr.js';
+import {replace, freeMetaVariables, exprEqual} from './Expr.js';
 
 export function setParents(tree) {
   if (!('hypotheses' in tree)) {
@@ -76,31 +76,31 @@ export function updateUndischargedAssumptions(tree) {
   go(tree, []);
 }
 
-export function freeVariablesInTree(tree) {
+export function freeMetaVariablesInTree(tree) {
 
   const res = new Set([])
 
   function go(subtree) {
     if ('goal' in subtree) {
-      const extras = freeVariables(subtree.goal);
+      const extras = freeMetaVariables(subtree.goal);
       for (const extra of extras) {
         res.add(extra);
       }
     }
     else if ('assumption' in subtree) {
-      const extras = freeVariables(subtree.assumption);
+      const extras = freeMetaVariables(subtree.assumption);
       for (const extra of extras) {
         res.add(extra);
       }
     }
     else {
-      const extras = freeVariables(subtree.conclusion);
+      const extras = freeMetaVariables(subtree.conclusion);
       for (const extra of extras) {
         res.add(extra);
       }
 
       if (subtree.discharge) {
-        const dischargeExtras = freeVariables(subtree.discharge);
+        const dischargeExtras = freeMetaVariables(subtree.discharge);
         for (const dischargeExtra of dischargeExtras) {
           res.add(dischargeExtra);
         }
