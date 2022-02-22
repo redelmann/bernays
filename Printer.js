@@ -3,6 +3,9 @@ export function pretty(expression) {
 
     function prettyAtom(expr) {
         switch (expr.kind) {
+            case "Variable": {
+                return expr.name;
+            }
             case "MetaVariable": {
                 return "?" + expr.name;
             }

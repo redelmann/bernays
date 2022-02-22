@@ -1,4 +1,5 @@
 
+export const Variable = "Variable";
 export const MetaVariable = "MetaVariable";
 export const Constant = "Constant";
 export const And = "And";
@@ -11,6 +12,9 @@ export function exprEqual(left, right) {
     return false;
   }
   switch (left.kind) {
+    case "Variable": {
+      return left.name === right.name;
+    }
     case "MetaVariable": {
       return left.name === right.name;
     }
@@ -25,6 +29,10 @@ export function exprEqual(left, right) {
            exprEqual(left.right, right.right);
     }
   }
+}
+
+export function variable(name) {
+  return { kind: Variable, name: name };
 }
 
 export function metaVariable(name) {
@@ -97,6 +105,9 @@ export function replace(within, replacements) {
   }
 
   switch (within.kind) {
+    case "Variable": {
+      return within;
+    }
     case "MetaVariable": {
       if (within.name in replacements) {
         return replacements[within.name];
@@ -129,6 +140,9 @@ export function freeMetaVariables(expression) {
 
   function go(expr) {
     switch(expr.kind) {
+      case "Variable": {
+        break;
+      }
       case "MetaVariable": {
         vars.add(expr.name);
         break;
@@ -159,6 +173,12 @@ export function fuse(expr, pattern) {
   while (queue.length > 0) {
     const [e, p] = queue.shift();
     switch (p.kind) {
+      case "Variable": {
+        if (e.kind !== "Variable" || p.name !== e.name) {
+          return null;
+        }
+        break;
+      }
       case "MetaVariable": {
         if (p.name in matches) {
           if (!exprEqual(e, matches[p.name])) {
