@@ -190,6 +190,9 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
             newDiv.style.left = x + 'px';
             newDiv.style.bottom = y + 'px';
             dx -= 30;
+            if (newSubtree.discharge) {
+              dx += 60;
+            }
           }
           while (!mainDiv.classList.contains("main")) {
             mainDiv = mainDiv.parentNode;
