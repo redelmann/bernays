@@ -14,7 +14,6 @@ export function initUI(container, options) {
   newGoalDiv.appendChild(plusIcon);
   menuDiv.appendChild(newGoalDiv);
 
-
   for (const rule of rules) {
     const itemDiv = document.createElement("div");
     itemDiv.bernays = { rule: rule };
@@ -34,7 +33,7 @@ export function initUI(container, options) {
   modalDiv.classList.add("modal");
   container.appendChild(modalDiv);
 
-  return {
+  container.bernays = {
     showModal() {
       modalDiv.style.display = 'block';
     },

@@ -7,13 +7,18 @@ import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleT
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 
-const container = document.getElementById("bernays");
+function getContainer(elem) {
+  var container = elem;
+  while (!container.classList.contains("bernays")) {
+    container = container.parentNode;
+  }
+  return container;
+}
 
-const UI = initUI(container);
-
-function addGoal(expr) {
+function addGoal(expr, elem) {
   const exDiv = goalToHTML({ goal: expr });
   exDiv.classList.add("main");
+  const container = getContainer(elem);
   container.appendChild(exDiv);
   const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
   const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
@@ -77,6 +82,9 @@ interact('.bernays .conclusion:not(.main > .conclusion) > div').draggable({
       const tree = elem.bernays.tree;
       const expr = tree.conclusion;
       const goal = { goal: expr, parent: tree.parent };
+
+      const container = getContainer(elem);
+
 
       var x = 0;
       var y = container.offsetHeight-elem.offsetHeight;
@@ -182,12 +190,13 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           freeVars.delete(handled);
         }
         if (freeVars.size > 0) {
+          const container = getContainer(event.target);
           const dialog = replacementsDialogHTML(dragTree, replacements, freeVars, function(repls) {
             dialog.remove();
-            UI.hideModal();
+            container.bernays.hideModal();
             update(repls);
           });
-          UI.showModal();
+          container.bernays.showModal();
           container.appendChild(dialog);
           dialog.bernays.initFocus();
         }
@@ -257,6 +266,7 @@ interact('.bernays .menu .item').draggable({
   if (interaction.pointerIsDown && !interaction.interacting()) {
     const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule));
     elem.classList.add("main");
+    const container = getContainer(event.currentTarget);
     container.appendChild(elem);
 
     const y = container.offsetHeight - event.currentTarget.offsetTop - event.currentTarget.offsetHeight;
@@ -313,14 +323,20 @@ interact('.bernays :not(.current) .discharge').draggable({
 });
 
 interact('.bernays .new-goal').on('click', function(event) {
-  UI.showModal();
+  const container = getContainer(event.target);
+  container.bernays.showModal();
   const dialogDiv = newGoalDialogHTML(function(expr) {
-    UI.hideModal();
+    container.bernays.hideModal();
     dialogDiv.remove();
-    addGoal(expr);
+    addGoal(expr, event.target);
   });
   container.appendChild(dialogDiv);
   dialogDiv.bernays.initFocus();
 });
 
+const containers = document.getElementsByClassName("bernays");
+
+for (const container of containers) {
+  initUI(container);
+}
 

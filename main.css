@@ -10,12 +10,12 @@ html, body {
 }
 
 body {
-  font-size: 16pt;
-  font-family: Monaco;
   margin: 0;
 }
 
 .bernays {
+  font-size: 16pt;
+  font-family: Monaco;
   background: white;
   height: 100%;
   width: 100%;
