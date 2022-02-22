@@ -54,7 +54,7 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
 
     const varElem = document.createElement("td");
     varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(key));
+    varElem.appendChild(document.createTextNode(pretty(metaVariable(key))));
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
@@ -78,7 +78,7 @@ function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
 
     const varElem = document.createElement("td");
     varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(varName));
+    varElem.appendChild(document.createTextNode(pretty(metaVariable(varName))));
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
