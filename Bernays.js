@@ -199,6 +199,9 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
             dialog.remove();
             container.bernays.hideModal();
             update(repls);
+          }, function() {
+            dialog.remove();
+            container.bernays.hideModal();
           });
           container.bernays.showModal();
           container.appendChild(dialog);
