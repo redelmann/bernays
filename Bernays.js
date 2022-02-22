@@ -158,6 +158,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
     event.target.classList.add("over");
   },
   ondrop(event) {
+    event.target.classList.remove("over");
     const dropGoal = event.target.bernays.tree.goal;
 
     if (event.relatedTarget.classList.contains("tree")) {
@@ -211,15 +212,11 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           update(replacements);
         }
       }
-      else {
-        event.target.classList.remove("over");
-      }
     }
     else {
       const dragExpr = event.relatedTarget.bernays.expr;
 
       if (!event.relatedTarget.bernays.scopeDiv.contains(event.target) || !exprEqual(dragExpr, dropGoal)) {
-        event.target.classList.remove("over");
         return;
       }
       
