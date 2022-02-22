@@ -193,13 +193,20 @@
   filter: brightness(1.3);
 }
 
-.bernays .conclusion > div, .bernays .goal.main {
+.bernays .conclusion > div, .bernays .goal, .bernays .assumption {
   cursor: move;
   pointer-events: auto;
 }
 
 .bernays .menu :first-child {
   margin-top: 0;
+}
+
+.bernays .main:not(.current) .conclusion.detach > div,
+.bernays .main:not(.current) .goal.detach,
+.bernays .main:not(.current).detach,
+.bernays .main:not(.current) .assumption.detach {
+  cursor: alias;
 }
 
 .bernays .trash {

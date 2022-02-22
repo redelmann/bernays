@@ -5,7 +5,7 @@ import {pretty} from './Printer.js';
 
 export function goalToHTML(subtree) {
   const goalDiv = document.createElement('div');
-  goalDiv.classList.add("goal");
+  goalDiv.classList.add("goal", "alt-detach");
   const leftPad = document.createElement('span');
   leftPad.appendChild(document.createTextNode('['));
   leftPad.classList.add('pad');
@@ -22,7 +22,7 @@ export function goalToHTML(subtree) {
 
 export function assumptionToHTML(subtree) {
   const assumptionDiv = document.createElement('div');
-  assumptionDiv.classList.add("assumption");
+  assumptionDiv.classList.add("assumption", "alt-detach");
   assumptionDiv.appendChild(document.createTextNode("[" + pretty(subtree.assumption) + "]"));
   assumptionDiv.bernays = { tree: subtree };
   return assumptionDiv;
@@ -80,7 +80,7 @@ export function treeToHTML(tree) {
   }
 
   const conclusionDiv = document.createElement('div');
-  conclusionDiv.classList.add("conclusion");
+  conclusionDiv.classList.add("conclusion", "alt-detach");
 
   const leftPad = document.createElement('span');
   leftPad.appendChild(document.createTextNode('['));
@@ -94,7 +94,7 @@ export function treeToHTML(tree) {
   conclusionInnerDiv.appendChild(leftPad);
   conclusionInnerDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
   conclusionInnerDiv.appendChild(rightPad);
-  
+
   conclusionDiv.appendChild(conclusionInnerDiv);
   treeDiv.appendChild(conclusionDiv);
 
