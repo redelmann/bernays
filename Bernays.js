@@ -4,130 +4,12 @@ import {parse} from './Parser.js';
 import {pretty} from './Printer.js';
 import {trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, implI, implE, notNotE, tnd, rules} from './Rules.js';
 import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, getContextDischarges, updateUndischargedAssumptions} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML} from './Render.js';
-import {initUI, exprInputHTML} from './UI.js';
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
+import {initUI} from './UI.js';
 
 const container = document.getElementById("bernays");
 
 const UI = initUI(container);
-
-function newGoalDialogHTML(onValidate, onCancel) {
-  const dialogDiv = document.createElement("div");
-  dialogDiv.classList.add("dialog");
-
-  const exprInput = exprInputHTML();
-  dialogDiv.appendChild(exprInput);
-
-  dialogDiv.bernays = { initFocus() { exprInput.focus(); } };
-
-  const controlsDiv = document.createElement("div");
-  controlsDiv.classList.add("controls");
-
-  const confirmButton = document.createElement("a");
-  confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Ajouter"));
-  confirmButton.addEventListener("click", function(event) {
-    if (!exprInput.bernays.is_valid) {
-      exprInput.focus();
-      return;
-    }
-    
-    onValidate(exprInput.bernays.expr);
-  });
-
-  controlsDiv.appendChild(confirmButton);
-  dialogDiv.appendChild(controlsDiv);
-
-  return dialogDiv;
-}
-
-function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
-  const replDiv = document.createElement("div");
-  replDiv.classList.add("dialog");
-
-  const tableElem = document.createElement("table");
-  replDiv.appendChild(tableElem);
-
-  for (const key in done) {
-    const rowElem = document.createElement("tr");
-    rowElem.classList.add("done");
-
-    const varElem = document.createElement("td");
-    varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(pretty(metaVariable(key))));
-    rowElem.appendChild(varElem);
-
-    const toElem = document.createElement("td");
-    toElem.classList.add("var");
-    toElem.appendChild(document.createTextNode("↦"));
-    rowElem.appendChild(toElem);
-
-    const exprElem = document.createElement("td");
-    exprElem.classList.add("expr");
-    exprElem.appendChild(document.createTextNode(pretty(done[key])));
-    rowElem.appendChild(exprElem);
-
-    tableElem.appendChild(rowElem);
-  }
-
-  const exprInputs = [];
-
-  missing.forEach(function(varName) {
-    const rowElem = document.createElement("tr");
-    rowElem.classList.add("done");
-
-    const varElem = document.createElement("td");
-    varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(pretty(metaVariable(varName))));
-    rowElem.appendChild(varElem);
-
-    const toElem = document.createElement("td");
-    toElem.classList.add("var");
-    toElem.appendChild(document.createTextNode("↦"));
-    rowElem.appendChild(toElem);
-
-    const exprElem = document.createElement("td");
-    exprElem.classList.add("expr");
-
-    const exprInput = exprInputHTML(metaVariable(varName));
-    exprInputs.push([varName, exprInput]);
-
-    exprElem.appendChild(exprInput);
-    rowElem.appendChild(exprElem);
-    tableElem.appendChild(rowElem);
-  });
-
-  replDiv.bernays = { initFocus() { exprInputs[0][1].select(); } };
-
-  const controlsDiv = document.createElement("div");
-  controlsDiv.classList.add("controls");
-
-  const confirmButton = document.createElement("a");
-  confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Appliquer"));
-  confirmButton.addEventListener("click", function(event) {
-    const newReplacements = {};
-
-    for (const [key, exprInput] of exprInputs) {
-      if (!exprInput.bernays.is_valid) {
-        exprInput.focus();
-        return;
-      }
-      newReplacements[key] = exprInput.bernays.expr;
-    }
-
-    for (const key in done) {
-      newReplacements[key] = done[key];
-    }
-    
-    onValidate(newReplacements);
-  });
-
-  controlsDiv.appendChild(confirmButton);
-  replDiv.appendChild(controlsDiv);
-
-  return replDiv;
-}
 
 function addGoal(expr) {
   const exDiv = goalToHTML({ goal: expr });
@@ -440,24 +322,5 @@ interact('.bernays .new-goal').on('click', function(event) {
   container.appendChild(dialogDiv);
   dialogDiv.bernays.initFocus();
 });
-
-function getParameter(name) {
-    var res = null;
-    location.search
-      .substr(1)
-      .split("&")
-      .forEach(function(item) {
-        const parts = item.split("=");
-        if (parts[0] === name) {
-          res = decodeURIComponent(parts[1]);
-        }
-      });
-    return res;
-}
-
-const goalExpr = getParameter('goal');
-if (goalExpr) {
-  addGoal(parse(tokenize(goalExpr)));
-}
 
 

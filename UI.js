@@ -1,7 +1,4 @@
 import {rules} from './Rules.js';
-import {tokenize} from './Tokenizer.js';
-import {parse, ParseError} from './Parser.js';
-import {pretty} from './Printer.js';
 
 export function initUI(container, options) {
   const menuDiv = document.createElement("div");
@@ -45,34 +42,4 @@ export function initUI(container, options) {
       modalDiv.style.display = 'none';
     }
   }
-}
-
-export function exprInputHTML(defaultExpr) {
-  const exprInput = document.createElement("input");
-  exprInput.classList.add("expr-input");
-  exprInput.setAttribute("type", "text");
-  if (defaultExpr) {
-    exprInput.setAttribute("value", pretty(defaultExpr));
-    exprInput.bernays = { expr: defaultExpr, is_valid: true };
-  }
-  else {
-    exprInput.setAttribute("value", "");
-    exprInput.bernays = { expr: null, is_valid: false };
-  }
-  exprInput.addEventListener("change", function(event) {
-    try {
-      const tokens = tokenize(exprInput.value);
-      const expr = parse(tokens);
-      exprInput.bernays.expr = expr;
-      exprInput.bernays.is_valid = true;
-      exprInput.classList.remove("invalid");
-    } catch {
-      exprInput.bernays.is_valid = false;
-      exprInput.classList.add("invalid");
-    }
-  });
-  exprInput.addEventListener("input", function(event) {
-    exprInput.classList.remove("invalid");
-  })
-  return exprInput;
 }
