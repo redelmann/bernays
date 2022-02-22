@@ -22,21 +22,12 @@ function addGoal(expr, elem) {
   container.appendChild(exDiv);
   const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
   const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
-  exDiv.style.left =  x + 'px';
-  exDiv.style.bottom = y + 'px';
-  exDiv.setAttribute('data-x', x);
-  exDiv.setAttribute('data-y', y);
+  moveMainDiv(exDiv, x, y);
 }
 
 const dragMoveListeners = {
   move(event) {
-    const target = event.target;
-    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-    const y = (parseFloat(target.getAttribute('data-y')) || 0) - event.dy;
-    target.style.left = x + 'px';
-    target.style.bottom = y + 'px';
-    target.setAttribute('data-x', x)
-    target.setAttribute('data-y', y)
+    moveMainDiv(event.target, event.dx, -event.dy);
   },
   start(event) {
     event.target.classList.add("current");
@@ -82,46 +73,61 @@ interact('.bernays .conclusion:not(.main > .conclusion) > div').draggable({
     while (elem && !elem.classList.contains("tree")) {
       elem = elem.parentNode;
     }
-    if (elem) {
-      const tree = elem.bernays.tree;
-      const expr = tree.conclusion;
-      const goal = { goal: expr, parent: tree.parent };
+    const tree = elem.bernays.tree;
+    const expr = tree.conclusion;
+    const goal = { goal: expr, parent: tree.parent };
 
-      const container = getContainer(elem);
+    const container = getContainer(elem);
 
+    var x = 0;
+    var y = container.offsetHeight-elem.offsetHeight;
 
-      var x = 0;
-      var y = container.offsetHeight-elem.offsetHeight;
-
-      var current = elem;
-      while (current !== container) {
-        x += current.offsetLeft;
-        y -= current.offsetTop;
-        current = current.offsetParent;
-      }
-
-      updateSubtree(tree.parent, tree, goal);
-      tree.parent = null;
-
-      updateUndischargedAssumptions(tree);
-
-      const goalDiv = goalToHTML(goal);
-      elem.parentNode.replaceChild(goalDiv, elem);
-
-      const newDiv = treeToHTML(tree);
-      newDiv.classList.add("main");
-
-      container.appendChild(newDiv);
-
-      newDiv.setAttribute('data-x', x);
-      newDiv.setAttribute('data-y', y);
-      newDiv.style.left = x + 'px';
-      newDiv.style.bottom = y + 'px';
-
-      interaction.start({ name: 'drag' }, event.interactable, newDiv);
+    var current = elem;
+    while (current !== container) {
+      x += current.offsetLeft;
+      y -= current.offsetTop;
+      current = current.offsetParent;
     }
+
+    updateSubtree(tree.parent, tree, goal);
+    tree.parent = null;
+
+    updateUndischargedAssumptions(tree);
+
+
+    var mainDiv = elem;
+    while (!mainDiv.classList.contains("main")) {
+      mainDiv = mainDiv.parentNode;
+    }
+    var dx = elem.offsetWidth;
+
+    const goalDiv = goalToHTML(goal);
+    elem.parentNode.replaceChild(goalDiv, elem);
+
+    dx -= goalDiv.offsetWidth;
+    dx /= 2;
+    moveMainDiv(mainDiv, dx, 0);
+
+
+    const newDiv = treeToHTML(tree);
+    newDiv.classList.add("main");
+
+    container.appendChild(newDiv);
+
+    moveMainDiv(newDiv, x, y);
+
+    interaction.start({ name: 'drag' }, event.interactable, newDiv);
   }
 });
+
+function moveMainDiv(div, dx, dy) {
+  const x = (parseFloat(div.getAttribute('data-x')) || 0) + dx;
+  const y = (parseFloat(div.getAttribute('data-y')) || 0) + dy;
+  div.setAttribute('data-x', x);
+  div.setAttribute('data-y', y);
+  div.style.left = x + 'px';
+  div.style.bottom = y + 'px';
+}
 
 interact('.bernays .assumption').on('doubletap', function (event) {
   const assumptionTree = event.target.bernays.tree;
@@ -185,10 +191,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           var mainDiv = newDiv;
           if (!parentTree) {
             newDiv.classList.add("main");
-            newDiv.setAttribute('data-x', x);
-            newDiv.setAttribute('data-y', y);
-            newDiv.style.left = x + 'px';
-            newDiv.style.bottom = y + 'px';
+            moveMainDiv(newDiv, x, y);
             dx -= 30;
             if (newSubtree.discharge) {
               dx += 60;
@@ -199,10 +202,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           }
           dx -= newDiv.offsetWidth;
           dx /= 2;
-          var mainDivX = parseFloat(mainDiv.getAttribute('data-x')) || 0;
-          mainDivX += dx;
-          mainDiv.setAttribute('data-x', mainDivX);
-          mainDiv.style.left = mainDivX + 'px';
+          moveMainDiv(mainDiv, dx, 0);
         }
 
         const freeVars = freeMetaVariablesInTree(dragTree);
@@ -291,11 +291,7 @@ interact('.bernays .menu .item').draggable({
     const y = container.offsetHeight - event.currentTarget.offsetTop - event.currentTarget.offsetHeight;
     const x = event.currentTarget.offsetLeft + (event.currentTarget.offsetWidth - elem.offsetWidth) / 2;
 
-    elem.setAttribute('data-x', x)
-    elem.setAttribute('data-y', y)
-    
-    elem.style.left = x + "px";
-    elem.style.bottom = y + "px";
+    moveMainDiv(elem, x, y);
 
     interaction.start({ name: 'drag' }, event.interactable, elem);
   }
@@ -331,11 +327,7 @@ interact('.bernays :not(.current) .discharge').draggable({
     const y = treeDiv.offsetHeight - event.currentTarget.offsetTop - event.currentTarget.offsetHeight;
     const x = event.currentTarget.offsetLeft + (event.currentTarget.offsetWidth - elem.offsetWidth) / 2;
 
-    elem.setAttribute('data-x', x)
-    elem.setAttribute('data-y', y)
-    
-    elem.style.left = x + "px";
-    elem.style.bottom = y + "px";
+    moveMainDiv(elem, x, y);
 
     interaction.start({ name: 'drag' }, event.interactable, elem);
   }
