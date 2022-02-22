@@ -36,7 +36,9 @@ export function pretty(expression) {
     function prettyBinary(expr, kind, op, below) {
         if (expr.kind === kind) {
             const left = below(expr.left);
-            const right = prettyBinary(expr.right, kind, op, below);
+            // Change here to remove unnecessary parentheses due to right associativity rule.
+            // const right = prettyBinary(expr.right, kind, op, below);
+            const right = below(expr.right);
             return left + " " + op + " " + right;
         }
         else {
