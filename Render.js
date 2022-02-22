@@ -1,3 +1,4 @@
+import {metaVariable} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse, ParseError} from './Parser.js';
 import {pretty} from './Printer.js';
@@ -121,6 +122,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
 }
 
 export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
+  
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
 
