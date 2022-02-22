@@ -5,22 +5,11 @@
   --shadow-filter: drop-shadow(0 0 0.4rem rgba(0, 0, 0, 0.2));
 }
 
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-}
-
 .bernays {
   font-size: 16pt;
   font-family: Monaco;
   background: white;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
   position: relative;
 }
 
@@ -173,10 +162,10 @@ body {
 }
 
 .bernays .menu {
-  position: absolute;
-  top: 5px;
-  left: 5px;
+  position: relative;
   z-index: 3;
+  margin: 10px;
+  width: fit-content;
 }
 
 .bernays .menu .item, .bernays .menu .new-goal {
@@ -244,11 +233,12 @@ body {
   display: none;
   width: 100%;
   height: 100%;
-  position: fixed;
+  position: absolute;
+  top: 0;
   z-index: 7;
   overflow: auto;
-  background-color: white;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .bernays .dialog {
@@ -259,6 +249,7 @@ body {
   margin-top: 50px;
   left: 0;
   right: 0;
+  top: 0;
   background: white;
   display: flex;
   flex-direction: column;

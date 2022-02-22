@@ -46,7 +46,11 @@ const dragMoveListeners = {
   }
 };
 
-const dragMoveModifiers = [];
+const dragMoveModifiers = [
+  interact.modifiers.restrict({
+    restriction: 'parent'
+  })
+];
 
 interact('.bernays .main.tree > .conclusion > div, .bernays .goal.main').draggable({
   manualStart: true,
