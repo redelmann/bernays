@@ -282,14 +282,14 @@
   margin-top: 20px;
 }
 
-.bernays .confirm {
+.bernays .dialog .controls a {
   cursor: pointer;
   font-family: "Helvetia Neue", Arial;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 15px;
   padding-right: 15px;
-  background: #F9F0C1;
+  background: white;
   border-radius: 15px;
   user-select: none;
   border: 2px solid rgba(0, 0, 0, 0.1);
@@ -297,12 +297,16 @@
   border-bottom: 4px solid rgba(0, 0, 0, 0.2);
 }
 
-.bernays .confirm:hover {
+.bernays .dialog .controls a:hover {
   filter: brightness(1.1);
 }
 
-.bernays .confirm:active {
+.bernays .dialog .controls a:active {
   margin-top: 2px;
   margin-left: 1px;
   border: 2px inset rgba(0, 0, 0, 0.1);
+}
+
+.bernays .dialog .controls .confirm {
+  background: #F9F0C1;
 }

@@ -333,6 +333,9 @@ interact('.bernays .new-goal').on('click', function(event) {
     container.bernays.hideModal();
     dialogDiv.remove();
     addGoal(expr, event.target);
+  }, function() {
+    container.bernays.hideModal();
+    dialogDiv.remove();
   });
   container.appendChild(dialogDiv);
   dialogDiv.bernays.initFocus();

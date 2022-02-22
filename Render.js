@@ -103,6 +103,14 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   const controlsDiv = document.createElement("div");
   controlsDiv.classList.add("controls");
 
+  const cancelButton = document.createElement("a");
+  cancelButton.classList.add("cancel");
+  cancelButton.appendChild(document.createTextNode("Annuler"));
+  cancelButton.addEventListener("click", function(event) {
+    onCancel();
+  });
+  controlsDiv.appendChild(cancelButton);
+
   const confirmButton = document.createElement("a");
   confirmButton.classList.add("confirm");
   confirmButton.appendChild(document.createTextNode("Ajouter"));
@@ -114,15 +122,15 @@ export function newGoalDialogHTML(onValidate, onCancel) {
     
     onValidate(exprInput.bernays.expr);
   });
-
   controlsDiv.appendChild(confirmButton);
+
   dialogDiv.appendChild(controlsDiv);
 
   return dialogDiv;
 }
 
 export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
-  
+
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
 
