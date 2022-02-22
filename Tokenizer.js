@@ -1,10 +1,10 @@
 
 const token_classes = [
   { re: /^\s+/, tag: "SPACE" },
-  { re: /^true/, tag: "TRUE" },
-  { re: /^false/, tag: "FALSE" },
+  { re: /^true|vrai/, tag: "TRUE" },
+  { re: /^false|faux/, tag: "FALSE" },
   { re: /^[a-zA-Z]+/, tag: "ID" },
-  { re: /^"[^"]*"/, tag: "ID" },
+  { re: /^\?[a-zA-Z]+/, tag: "META_ID" },
   { re: /^&|⋀/, tag: "AND"},
   { re: /^\||⋁/, tag: "OR"},
   { re: /^=>|⇒/, tag: "IMPLIES"},

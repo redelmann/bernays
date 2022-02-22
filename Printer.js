@@ -4,7 +4,7 @@ export function pretty(expression) {
     function prettyAtom(expr) {
         switch (expr.kind) {
             case "MetaVariable": {
-                return expr.name;
+                return "?" + expr.name;
             }
             case "Constant": {
                 if (expr.value) {

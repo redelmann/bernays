@@ -29,9 +29,9 @@ export function parse(input) {
         if (consume("FALSE")) {
             return constant(false);
         }
-        const token = consume("ID");
+        const token = consume("META_ID");
         if (token) {
-            return metaVariable(token.content);
+            return metaVariable(token.content.substring(1));
         }
         return null;
     }
