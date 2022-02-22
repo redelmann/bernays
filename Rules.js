@@ -98,4 +98,11 @@ export const tnd = {
     conclusion: or(metaVariable("A"), not(metaVariable("A")))
 };
 
-export const rules = [trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, orE, implI, implE, notNotE, tnd];
+export const raa = {
+    name: "RAA",
+    hypotheses: [constant(false)],
+    discharge: not(metaVariable("A")),
+    conclusion: metaVariable("A")
+};
+
+export const rules = [trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, orE, implI, implE, notNotE, tnd, raa];
