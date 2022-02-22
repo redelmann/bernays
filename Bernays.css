@@ -6,11 +6,12 @@
 }
 
 .bernays {
-  font-size: 16pt;
+  font-size: 12pt;
   font-family: Monaco;
   background: white;
   overflow: hidden;
   position: relative;
+  white-space: nowrap;
 }
 
 .bernays .tree {
@@ -260,7 +261,9 @@
 }
 
 .bernays .expr-input {
-  font-size: 16pt;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 12pt;
   height: 30px;
   line-height: 30px;
   width: auto;
