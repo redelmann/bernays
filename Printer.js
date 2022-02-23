@@ -7,7 +7,7 @@ export function pretty(expression) {
                 return expr.name;
             }
             case "MetaVariable": {
-                return "?" + expr.name;
+                return expr.name;
             }
             case "Constant": {
                 if (expr.value) {

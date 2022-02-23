@@ -31,7 +31,7 @@ export function parse(input) {
         }
         var token = consume("META_ID");
         if (token) {
-            return metaVariable(token.content.substring(1));
+            return metaVariable(token.content);
         }
         token = consume("ID");
         if (token) {
