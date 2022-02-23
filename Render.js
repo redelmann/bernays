@@ -121,20 +121,28 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   });
   controlsDiv.appendChild(cancelButton);
 
-  const confirmButton = document.createElement("a");
-  confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Ajouter"));
-  confirmButton.addEventListener("click", function(event) {
+  function checkDone(event) {
     if (!exprInput.bernays.is_valid) {
       exprInput.focus();
       return;
     }
     
     onValidate(exprInput.bernays.expr);
-  });
+  }
+
+  const confirmButton = document.createElement("a");
+  confirmButton.classList.add("confirm");
+  confirmButton.appendChild(document.createTextNode("Ajouter"));
+  confirmButton.addEventListener("click", checkDone);
   controlsDiv.appendChild(confirmButton);
 
   dialogDiv.appendChild(controlsDiv);
+
+  exprInput.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+      checkDone(event);
+    }
+  })
 
   return dialogDiv;
 }
@@ -209,10 +217,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   });
   controlsDiv.appendChild(cancelButton);
 
-  const confirmButton = document.createElement("a");
-  confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Appliquer"));
-  confirmButton.addEventListener("click", function(event) {
+  function checkDone(event) {
     const newReplacements = {};
 
     for (const [key, exprInput] of exprInputs) {
@@ -228,10 +233,35 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
     }
     
     onValidate(newReplacements);
-  });
+  }
+
+  const confirmButton = document.createElement("a");
+  confirmButton.classList.add("confirm");
+  confirmButton.appendChild(document.createTextNode("Appliquer"));
+  confirmButton.addEventListener("click", checkDone);
 
   controlsDiv.appendChild(confirmButton);
   replDiv.appendChild(controlsDiv);
+
+  for (var i = 0; i < exprInputs.length - 1; i++) {
+    const exprInput = exprInputs[i][1];
+    const nextExprInput = exprInputs[i + 1][1];
+
+    exprInput.addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        if (exprInput.bernays.is_valid) {
+          nextExprInput.select();
+        }
+      }
+    })
+  }
+
+  const lastExprInput = exprInputs[exprInputs.length - 1][1];
+  lastExprInput.addEventListener("keyup", function() {
+    if (event.key === "Enter") {
+      checkDone(event);
+    }
+  });
 
   return replDiv;
 }
