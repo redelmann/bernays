@@ -1,6 +1,7 @@
 import {constant, and, or, implies, not, metaVariable} from './Expr.js';
 
 export const trueI = {
+    code: "trueI",
     name: "⊤I",
     hypotheses: [],
     discharge: null, 
@@ -8,6 +9,7 @@ export const trueI = {
 };
 
 export const falseE = {
+    code: "falseE",
     name: "⊥E",
     hypotheses: [constant(false)],
     discharge: null, 
@@ -15,6 +17,7 @@ export const falseE = {
 };
 
 export const notI = {
+    code: "notI",
     name: "¬I",
     hypotheses: [constant(false)],
     discharge: metaVariable("A"), 
@@ -22,6 +25,7 @@ export const notI = {
 };
 
 export const notE = {
+    code: "notE",
     name: "¬E",
     hypotheses: [not(metaVariable("A")), metaVariable("A")],
     discharge: null,
@@ -29,6 +33,7 @@ export const notE = {
 };
 
 export const andI = {
+    code: "andI",
     name: "⋀I",
     hypotheses: [metaVariable("A"), metaVariable("B")],
     discharge: null,
@@ -36,6 +41,7 @@ export const andI = {
 };
 
 export const andE1 = {
+    code: "andE1",
     name: "⋀E1",
     hypotheses: [and(metaVariable("A"), metaVariable("B"))],
     discharge: null, 
@@ -43,6 +49,7 @@ export const andE1 = {
 };
 
 export const andE2 = {
+    code: "andE2",
     name: "⋀E2",
     hypotheses: [and(metaVariable("A"), metaVariable("B"))],
     discharge: null, 
@@ -50,6 +57,7 @@ export const andE2 = {
 };
 
 export const orI1 = {
+    code: "orI1",
     name: "⋁I1",
     hypotheses: [metaVariable("A")],
     discharge: null, 
@@ -57,6 +65,7 @@ export const orI1 = {
 };
 
 export const orI2 = {
+    code: "orI2",
     name: "⋁I2",
     hypotheses: [metaVariable("B")],
     discharge: null, 
@@ -64,6 +73,7 @@ export const orI2 = {
 };
 
 export const orE = {
+    code: "orE",
     name: "⋁E",
     hypotheses: [or(metaVariable("A"), metaVariable("B")), implies(metaVariable("A"), metaVariable("C")), implies(metaVariable("B"), metaVariable("C"))],
     discharge: null, 
@@ -71,6 +81,7 @@ export const orE = {
 };
 
 export const implI = {
+    code: "implI",
     name: "⇒I",
     hypotheses: [metaVariable("B")],
     discharge: metaVariable("A"), 
@@ -78,6 +89,7 @@ export const implI = {
 };
 
 export const implE = {
+    code: "implE",
     name: "⇒E",
     hypotheses: [implies(metaVariable("A"), metaVariable("B")), metaVariable("A")],
     discharge: null, 
@@ -85,6 +97,7 @@ export const implE = {
 };
 
 export const notNotE = {
+    code: "notNotE",
     name: "¬¬E",
     hypotheses: [not(not(metaVariable("A")))],
     discharge: null,
@@ -92,6 +105,7 @@ export const notNotE = {
 };
 
 export const tnd = {
+    code: "tnd",
     name: "TND",
     hypotheses: [],
     discharge: null,
@@ -99,6 +113,7 @@ export const tnd = {
 };
 
 export const raa = {
+    code: "raa",
     name: "RAA",
     hypotheses: [constant(false)],
     discharge: not(metaVariable("A")),

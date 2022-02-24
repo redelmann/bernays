@@ -455,6 +455,16 @@ interact('.bernays .new-goal').on('click', function(event) {
 const containers = document.getElementsByClassName("bernays");
 
 for (const container of containers) {
-  initUI(container);
+  const options = {};
+  if (container.hasAttribute('data-include-rules')) {
+    options.includeRules = new Set(container.getAttribute('data-include-rules').split(/\s+/));
+  }
+  if (container.hasAttribute('data-exclude-rules')) {
+    options.excludeRules = new Set(container.getAttribute('data-exclude-rules').split(/\s+/));
+  }
+  initUI(container, options);
+  if (container.hasAttribute('data-goal')) {
+    addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
+  }
 }
 
