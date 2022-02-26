@@ -320,3 +320,15 @@
 .bernays .dialog .controls .confirm {
   background: #F9F0C1;
 }
+
+.bernays .metavariable {
+  display: inline-block;
+  background: #ddd;
+  border: 1px inset rgba(120, 120, 120, 0.5);
+  padding-left: 4px;
+  padding-right: 4px;
+  color: black;
+  border-radius: var(--border-radius);
+  margin-left: 2px;
+  margin-right: 2px;
+}

@@ -1,7 +1,7 @@
 import {metaVariable} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse, ParseError} from './Parser.js';
-import {pretty} from './Printer.js';
+import {pretty, prettyHTML} from './Printer.js';
 
 export function goalToHTML(subtree) {
   const goalDiv = document.createElement('div');
@@ -14,7 +14,7 @@ export function goalToHTML(subtree) {
   rightPad.classList.add('pad');
 
   goalDiv.appendChild(leftPad);
-  goalDiv.appendChild(document.createTextNode(pretty(subtree.goal)));
+  goalDiv.appendChild(prettyHTML(subtree.goal));
   goalDiv.appendChild(rightPad);
   goalDiv.bernays = { tree: subtree };
   return goalDiv;
@@ -23,7 +23,13 @@ export function goalToHTML(subtree) {
 export function assumptionToHTML(subtree) {
   const assumptionDiv = document.createElement('div');
   assumptionDiv.classList.add("assumption", "alt-detach");
-  assumptionDiv.appendChild(document.createTextNode("[" + pretty(subtree.assumption) + "]"));
+  const leftPad = document.createElement('span');
+  leftPad.appendChild(document.createTextNode('['));
+  const rightPad = document.createElement('span');
+  rightPad.appendChild(document.createTextNode(']'));
+  assumptionDiv.appendChild(leftPad);
+  assumptionDiv.appendChild(prettyHTML(subtree.assumption));
+  assumptionDiv.appendChild(rightPad);
   assumptionDiv.bernays = { tree: subtree };
   return assumptionDiv;
 }
@@ -92,7 +98,7 @@ export function treeToHTML(tree) {
   const conclusionInnerDiv = document.createElement('div');
 
   conclusionInnerDiv.appendChild(leftPad);
-  conclusionInnerDiv.appendChild(document.createTextNode(pretty(tree.conclusion)));
+  conclusionInnerDiv.appendChild(prettyHTML(tree.conclusion));
   conclusionInnerDiv.appendChild(rightPad);
 
   conclusionDiv.appendChild(conclusionInnerDiv);
@@ -161,7 +167,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
 
     const varElem = document.createElement("td");
     varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(pretty(metaVariable(key))));
+    varElem.appendChild(prettyHTML(metaVariable(key)));
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
@@ -185,7 +191,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
 
     const varElem = document.createElement("td");
     varElem.classList.add("var");
-    varElem.appendChild(document.createTextNode(pretty(metaVariable(varName))));
+    varElem.appendChild(prettyHTML(metaVariable(varName)));
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
