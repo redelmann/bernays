@@ -1,7 +1,8 @@
 import {metaVariable} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
-import {parse, ParseError} from './Parser.js';
+import {parse} from './Parser.js';
 import {pretty, prettyHTML} from './Printer.js';
+import {_} from './Lang.js';
 
 export function goalToHTML(subtree) {
   const goalDiv = document.createElement('div');
@@ -121,7 +122,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
 
   const cancelButton = document.createElement("a");
   cancelButton.classList.add("cancel");
-  cancelButton.appendChild(document.createTextNode("Annuler"));
+  cancelButton.appendChild(document.createTextNode(_("cancel")));
   cancelButton.addEventListener("click", function(event) {
     onCancel();
   });
@@ -138,7 +139,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
 
   const confirmButton = document.createElement("a");
   confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Ajouter"));
+  confirmButton.appendChild(document.createTextNode(_("add")));
   confirmButton.addEventListener("click", checkDone);
   controlsDiv.appendChild(confirmButton);
 
@@ -217,7 +218,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
 
   const cancelButton = document.createElement("a");
   cancelButton.classList.add("cancel");
-  cancelButton.appendChild(document.createTextNode("Annuler"));
+  cancelButton.appendChild(document.createTextNode(_("cancel")));
   cancelButton.addEventListener("click", function(event) {
     onCancel();
   });
@@ -243,7 +244,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
 
   const confirmButton = document.createElement("a");
   confirmButton.classList.add("confirm");
-  confirmButton.appendChild(document.createTextNode("Appliquer"));
+  confirmButton.appendChild(document.createTextNode(_("apply")));
   confirmButton.addEventListener("click", checkDone);
 
   controlsDiv.appendChild(confirmButton);
