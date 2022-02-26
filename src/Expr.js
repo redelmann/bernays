@@ -48,9 +48,9 @@ export function and(left, right) {
 }
 
 export function ands(exprs) {
-  const es = exprs.slice()
+  const es = exprs.slice();
   if (es.length == 0) {
-    throw new Error("ands: exprs is empty.")
+    throw new Error("ands: exprs is empty.");
   }
   while (es.length > 1) {
     const right = es.pop();
@@ -65,9 +65,9 @@ export function or(left, right) {
 }
 
 export function ors(exprs) {
-  const es = exprs.slice()
+  const es = exprs.slice();
   if (es.length == 0) {
-    throw new Error("ors: exprs is empty.")
+    throw new Error("ors: exprs is empty.");
   }
   while (es.length > 1) {
     const right = es.pop();
@@ -82,9 +82,9 @@ export function implies(left, right) {
 }
 
 export function impliess(exprs) {
-  const es = exprs.slice()
+  const es = exprs.slice();
   if (es.length == 0) {
-    throw new Error("ors: exprs is empty.")
+    throw new Error("ors: exprs is empty.");
   }
   while (es.length > 1) {
     const right = es.pop();
@@ -145,6 +145,37 @@ export function freeMetaVariables(expression) {
       }
       case "MetaVariable": {
         vars.add(expr.name);
+        break;
+      }
+      case "Constant": {
+        break;
+      }
+      case "Not": {
+        go(expr.inner);
+        break;
+      }
+      default: {
+        go(expr.left);
+        go(expr.right);
+        break;
+      }
+    }
+  }
+
+  go(expression);
+  return vars;
+}
+
+export function freeVariables() {
+  const vars = new Set([]);
+
+  function go(expr) {
+    switch(expr.kind) {
+      case "Variable": {
+        vars.add(expr.name);
+        break;
+      }
+      case "MetaVariable": {
         break;
       }
       case "Constant": {
