@@ -6,6 +6,7 @@ export const And = "And";
 export const Or = "Or";
 export const Implies = "Implies";
 export const Not = "Not";
+export const Iff = "Iff";
 
 export function exprEqual(left, right) {
   if (left.kind !== right.kind) {
@@ -26,7 +27,7 @@ export function exprEqual(left, right) {
     }
     default: {
       return exprEqual(left.left, right.left) &&
-           exprEqual(left.right, right.right);
+             exprEqual(left.right, right.right);
     }
   }
 }
@@ -90,6 +91,23 @@ export function impliess(exprs) {
     const right = es.pop();
     const left = es.pop();
     es.push(implies(left, right));
+  }
+  return es[0];
+}
+
+export function iff(left, right) {
+  return { kind: Iff, left: left, right: right };
+}
+
+export function iffs(exprs) {
+  const es = exprs.slice();
+  if (es.length == 0) {
+    throw new Error("iffs: exprs is empty.");
+  }
+  while (es.length > 1) {
+    const right = es.pop();
+    const left = es.pop();
+    es.push(iff(left, right));
   }
   return es[0];
 }

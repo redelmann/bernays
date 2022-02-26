@@ -54,8 +54,12 @@ export function pretty(expression) {
         return prettyBinary(expr, "Or", "⋁", prettyConjunction);
     }
 
-    function prettyExpr(expr) {
+    function prettyImplication(expr) {
         return prettyBinary(expr, "Implies", "⇒", prettyDisjunction);
+    }
+
+    function prettyExpr(expr) {
+        return prettyBinary(expr, "Iff", "⇔", prettyImplication);
     }
 
     return prettyExpr(expression);
@@ -165,8 +169,12 @@ export function prettyHTML(expr) {
         return prettyBinary(expr, "Or", "⋁", prettyConjunction);
     }
 
-    function prettyExpr(expr) {
+    function prettyImplication(expr) {
         return prettyBinary(expr, "Implies", "⇒", prettyDisjunction);
+    }
+
+    function prettyExpr(expr) {
+        return prettyBinary(expr, "Iff", "⇔", prettyImplication);
     }
 
     const exprSpan = document.createElement("span");

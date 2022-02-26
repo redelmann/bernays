@@ -1,4 +1,4 @@
-import {constant, and, or, implies, not, metaVariable} from './Expr.js';
+import {constant, and, or, implies, not, iff, metaVariable} from './Expr.js';
 
 export const trueI = {
     code: "trueI",
@@ -96,6 +96,30 @@ export const implE = {
     conclusion: metaVariable("B")
 };
 
+export const iffI = {
+    code: "iffI",
+    name: "⇔I",
+    hypotheses: [implies(metaVariable("A"), metaVariable("B")), implies(metaVariable("B"), metaVariable("A"))],
+    discharge: null,
+    conclusion: iff(metaVariable("A"), metaVariable("B"))
+}
+
+export const iffE1 = {
+    code: "iffE1",
+    name: "⇔E1",
+    hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
+    discharge: null,
+    conclusion: implies(metaVariable("A"), metaVariable("B"))
+}
+
+export const iffE2 = {
+    code: "iffE2",
+    name: "⇔E2",
+    hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
+    discharge: null,
+    conclusion: implies(metaVariable("B"), metaVariable("A"))
+}
+
 export const notNotE = {
     code: "notNotE",
     name: "¬¬E",
@@ -120,4 +144,11 @@ export const raa = {
     conclusion: metaVariable("A")
 };
 
-export const rules = [trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, orE, implI, implE, notNotE, tnd, raa];
+export const rules = [
+    trueI, falseE,
+    notI, notE,
+    andI, andE1, andE2,
+    orI1, orI2, orE,
+    implI, implE,
+    iffI, iffE1, iffE2,
+    notNotE, tnd, raa];

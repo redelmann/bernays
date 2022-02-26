@@ -1,4 +1,4 @@
-import {constant, ands, ors, impliess, not, metaVariable, variable} from './Expr.js';
+import {constant, ands, ors, impliess, iffs, not, metaVariable, variable} from './Expr.js';
 
 export class ParseError extends Error {
     constructor(code, ...params) {
@@ -77,8 +77,12 @@ export function parse(input) {
         return parseBinary("OR", parseConjunction, ors);
     }
 
-    function parseExpr() {
+    function parseImplication() {
         return parseBinary("IMPLIES", parseDisjunction, impliess);
+    }
+
+    function parseExpr() {
+        return parseBinary("IFF", parseImplication, iffs);
     }
 
     function parseExprWithParentheses() {
