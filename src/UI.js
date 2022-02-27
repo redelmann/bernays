@@ -16,20 +16,14 @@ export function initUI(container, options) {
 
   const activeRules = rules.slice();
 
-  console.log(options);
-
   if (options && 'includeRules' in options) {
     for (var i = activeRules.length - 1; i >= 0; i--) {
       const rule = activeRules[i];
       if (!options.includeRules.has(rule.code)) {
-        console.log(rule.code);
         activeRules.splice(i, 1);
       }
     }
   }
-
-  console.log(activeRules.slice());
-
 
   if (options && 'excludeRules' in options) {
     for (var i = activeRules.length - 1; i >= 0; i--) {
@@ -39,8 +33,6 @@ export function initUI(container, options) {
       }
     }
   }
-
-  console.log(activeRules.slice());
 
   for (const rule of activeRules) {
     const itemDiv = document.createElement("div");
