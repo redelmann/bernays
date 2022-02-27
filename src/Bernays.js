@@ -41,7 +41,7 @@ const dragMoveModifiers = [
   })
 ];
 
-interact('.bernays .goal, .bernays .assumption').draggable({
+interact('.bernays .main.goal, .bernays .tree:not(.example-tree) .goal, .tree:not(.example-tree) .assumption').draggable({
   manualStart: true,
   listeners: {
     move: dragMoveListeners.move,
@@ -142,7 +142,7 @@ document.addEventListener('keydown', updateCursor);
 document.addEventListener('keyup', updateCursor);
 document.addEventListener('visibilitychange', updateCursor);
 
-interact('.bernays .conclusion > div').draggable({
+interact('.bernays .tree:not(.example-tree) .conclusion > div').draggable({
   manualStart: true,
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,

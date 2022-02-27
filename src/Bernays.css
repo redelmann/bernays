@@ -170,6 +170,19 @@
   margin-right: auto;
 }
 
+.bernays .example-tree {
+  margin: auto;
+}
+
+.bernays .example-tree .discharge,
+.bernays .example-tree .hypotheses,
+.bernays .example-tree .conclusion > div,
+.bernays .example-tree .goal,
+.bernays .example-tree .assumption,
+.bernays .example-tree .name {
+  cursor: auto;
+}
+
 .bernays .menu {
   position: relative;
   z-index: 3;

@@ -171,6 +171,10 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   explanationsParagraph.appendChild(document.createTextNode(_("select_metavariables")));
   replDiv.appendChild(explanationsParagraph);
 
+  const treeDiv = treeToHTML(tree)
+  treeDiv.classList.add("example-tree");
+  replDiv.appendChild(treeDiv);
+
   const tableElem = document.createElement("table");
   replDiv.appendChild(tableElem);
 
