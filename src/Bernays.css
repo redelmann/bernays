@@ -7,11 +7,19 @@
 
 .bernays {
   font-size: 12pt;
-  font-family: Monaco;
+  font-family: "Helvetia Neue", Arial;
   background: white;
   overflow: hidden;
   position: relative;
   white-space: nowrap;
+}
+
+.bernays .expr, .bernays .menu, .bernays .name {
+  font-family: Monaco;
+}
+
+.bernays p, .bernays h1 {
+  white-space: normal;
 }
 
 .bernays .tree {
@@ -262,9 +270,15 @@
   display: flex;
   flex-direction: column;
   width: fit-content;
+  max-width: 400px;
   padding: 15px;
   border-radius: 15px;
   filter: var(--shadow-filter);
+}
+
+.bernays .dialog h1 {
+  font-size: 16pt;
+  margin-bottom: 5px;
 }
 
 .bernays .expr-input {
@@ -273,7 +287,8 @@
   font-size: 12pt;
   height: 30px;
   line-height: 30px;
-  width: auto;
+  box-sizing: border-box;
+  width: 100%;
   font-family: Monaco;
   border: 0;
   background: rgba(0, 0, 0, 0.1);
@@ -282,6 +297,31 @@
 
 .bernays .expr-input.invalid {
   background: #F6A8A6;
+}
+
+.bernays .dialog table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.bernays .dialog td {
+  padding: 0;
+  padding-top: 10px;
+}
+
+.bernays .dialog td.var {
+  width: 20px;
+  text-align: left;
+}
+
+.bernays .dialog td.to {
+  width: 50px;
+  text-align: center;
+}
+
+.bernays .dialog td.value {
+  width: 100%;
 }
 
 .bernays .dialog .controls {
@@ -294,7 +334,6 @@
 
 .bernays .dialog .controls a {
   cursor: pointer;
-  font-family: "Helvetia Neue", Arial;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 15px;

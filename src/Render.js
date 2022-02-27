@@ -112,6 +112,10 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   const dialogDiv = document.createElement("div");
   dialogDiv.classList.add("dialog");
 
+  const titleElem = document.createElement("h1");
+  titleElem.appendChild(document.createTextNode(_("new_goal")));
+  dialogDiv.appendChild(titleElem);
+
   const exprInput = exprInputHTML();
   dialogDiv.appendChild(exprInput);
 
@@ -159,6 +163,14 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
 
+  const titleElem = document.createElement("h1");
+  titleElem.appendChild(document.createTextNode(_("choose_replacements")));
+  replDiv.appendChild(titleElem);
+
+  const explanationsParagraph = document.createElement("p");
+  explanationsParagraph.appendChild(document.createTextNode(_("select_metavariables")));
+  replDiv.appendChild(explanationsParagraph);
+
   const tableElem = document.createElement("table");
   replDiv.appendChild(tableElem);
 
@@ -172,13 +184,13 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
-    toElem.classList.add("var");
+    toElem.classList.add("to");
     toElem.appendChild(document.createTextNode("↦"));
     rowElem.appendChild(toElem);
 
     const exprElem = document.createElement("td");
-    exprElem.classList.add("expr");
-    exprElem.appendChild(document.createTextNode(pretty(done[key])));
+    exprElem.classList.add("value");
+    exprElem.appendChild(prettyHTML(done[key]));
     rowElem.appendChild(exprElem);
 
     tableElem.appendChild(rowElem);
@@ -196,12 +208,12 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");
-    toElem.classList.add("var");
+    toElem.classList.add("to");
     toElem.appendChild(document.createTextNode("↦"));
     rowElem.appendChild(toElem);
 
     const exprElem = document.createElement("td");
-    exprElem.classList.add("expr");
+    exprElem.classList.add("value");
 
     const exprInput = exprInputHTML(metaVariable(varName));
     exprInputs.push([varName, exprInput]);
