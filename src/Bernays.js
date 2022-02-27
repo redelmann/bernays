@@ -1,9 +1,7 @@
-import {constant, and, or, implies, not, metaVariable, fuse, replace, freeMetaVariables, exprEqual} from './Expr.js';
+import {fuse, exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
-import {pretty} from './Printer.js';
-import {trueI, falseE, notI, notE, andI, andE1, andE2, orI1, orI2, implI, implE, notNotE, tnd, rules} from './Rules.js';
-import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, getContextDischarges, updateUndischargedAssumptions} from './Trees.js'; 
+import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, updateUndischargedAssumptions} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 
