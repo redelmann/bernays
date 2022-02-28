@@ -87,6 +87,8 @@
   padding: var(--border-radius);
   border: var(--border-size) solid transparent;
   border-radius: var(--border-radius);
+  min-width: 50px;
+  text-align: center;
 }
 
 .bernays .assumption.current {
@@ -173,8 +175,6 @@
 
 .bernays .conclusion > div {
   width: fit-content;
-  min-width: 50px;
-  text-align: center;
   margin-left: auto;
   margin-right: auto;
 }
