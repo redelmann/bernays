@@ -65,7 +65,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
     if (event.altKey) {
       const elem = event.currentTarget;
       const tree = elem.bernays.tree;
-      const newElem = 'goal' in tree ? goalToHTML(tree) : assumptionToHTML(tree);
+      const newElem = 'goal' in tree ? goalToHTML(tree, true) : assumptionToHTML(tree, true);
       const container = getContainer(event.currentTarget);
 
       var x = 0;
