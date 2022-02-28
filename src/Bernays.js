@@ -389,13 +389,17 @@ interact('.bernays .menu .item').draggable({
     const container = getContainer(event.currentTarget);
     container.appendChild(elem);
 
+    var x = event.currentTarget.offsetWidth / 2;
     var y = container.offsetHeight - event.currentTarget.offsetHeight;
     var current = event.currentTarget;
     while (current !== container) {
+      x += current.offsetLeft;
       y -= current.offsetTop;
       current = current.offsetParent;
     }
-    const x = event.currentTarget.offsetLeft + (event.currentTarget.offsetWidth - elem.offsetWidth) / 2;
+    
+    const childDiv = elem.childNodes[2].childNodes[0];
+    x -= childDiv.offsetLeft + childDiv.offsetWidth / 2;
 
     moveMainDiv(elem, x, y);
 
