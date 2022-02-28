@@ -172,15 +172,8 @@
 
 .bernays .example-tree {
   margin: auto;
-}
-
-.bernays .example-tree .discharge,
-.bernays .example-tree .hypotheses,
-.bernays .example-tree .conclusion > div,
-.bernays .example-tree .goal,
-.bernays .example-tree .assumption,
-.bernays .example-tree .name {
-  cursor: auto;
+  max-width: 600px;
+  overflow: scroll;
 }
 
 .bernays .menu {
@@ -214,7 +207,7 @@
   filter: brightness(1.3);
 }
 
-.bernays .conclusion > div, .bernays .goal, .bernays .assumption {
+.bernays .conclusion.interactive > div, .bernays .goal.interactive, .bernays .assumption.interactive {
   cursor: move;
   pointer-events: auto;
 }
@@ -283,7 +276,7 @@
   display: flex;
   flex-direction: column;
   width: fit-content;
-  max-width: 400px;
+  max-width: 600px;
   padding: 15px;
   border-radius: 15px;
   filter: var(--shadow-filter);

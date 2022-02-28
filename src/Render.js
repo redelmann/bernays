@@ -4,8 +4,11 @@ import {parse} from './Parser.js';
 import {pretty, prettyHTML} from './Printer.js';
 import {_} from './Lang.js';
 
-export function goalToHTML(subtree) {
+export function goalToHTML(subtree, is_interactive) {
   const goalDiv = document.createElement('div');
+  if (is_interactive) {
+    goalDiv.classList.add('interactive');
+  }
   goalDiv.classList.add("goal", "alt-detach");
   const leftPad = document.createElement('span');
   leftPad.appendChild(document.createTextNode('['));
@@ -21,8 +24,11 @@ export function goalToHTML(subtree) {
   return goalDiv;
 }
 
-export function assumptionToHTML(subtree) {
+export function assumptionToHTML(subtree, is_interactive) {
   const assumptionDiv = document.createElement('div');
+  if (is_interactive) {
+    assumptionDiv.classList.add('interactive');
+  }
   assumptionDiv.classList.add("assumption", "alt-detach");
   const leftPad = document.createElement('span');
   leftPad.appendChild(document.createTextNode('['));
@@ -35,7 +41,7 @@ export function assumptionToHTML(subtree) {
   return assumptionDiv;
 }
 
-export function treeToHTML(tree) {
+export function treeToHTML(tree, is_interactive) {
   const treeDiv = document.createElement('div');
   treeDiv.classList.add("tree");
   treeDiv.bernays = { tree: tree };
@@ -48,15 +54,15 @@ export function treeToHTML(tree) {
     const hypothesisDiv = document.createElement('div');
     hypothesisDiv.classList.add("hypothesis");
     if ('goal' in subtree) {
-      const goalDiv = goalToHTML(subtree);
+      const goalDiv = goalToHTML(subtree, is_interactive);
       hypothesisDiv.appendChild(goalDiv);
     }
     else if ('assumption' in subtree) {
-      const assumptionDiv = assumptionToHTML(subtree);
+      const assumptionDiv = assumptionToHTML(subtree, is_interactive);
       hypothesisDiv.appendChild(assumptionDiv);
     }
     else {
-      hypothesisDiv.appendChild(treeToHTML(subtree));
+      hypothesisDiv.appendChild(treeToHTML(subtree, is_interactive));
     }
     hypothesesDiv.appendChild(hypothesisDiv);
   })
@@ -78,6 +84,9 @@ export function treeToHTML(tree) {
     treeDiv.classList.add("has-discharge");
     const dischargeDiv = document.createElement('div');
     dischargeDiv.classList.add("discharge");
+    if (is_interactive) {
+      dischargeDiv.classList.add('interactive');
+    }
 
     dischargeDiv.bernays = { expr: tree.discharge, scopeDiv: hypothesesDiv, treeDiv: treeDiv };
     const iconDiv = document.createElement("i");
@@ -88,6 +97,9 @@ export function treeToHTML(tree) {
 
   const conclusionDiv = document.createElement('div');
   conclusionDiv.classList.add("conclusion", "alt-detach");
+  if (is_interactive) {
+    conclusionDiv.classList.add('interactive');
+  }
 
   const leftPad = document.createElement('span');
   leftPad.appendChild(document.createTextNode('['));
@@ -171,7 +183,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   explanationsParagraph.appendChild(document.createTextNode(_("select_metavariables")));
   replDiv.appendChild(explanationsParagraph);
 
-  const treeDiv = treeToHTML(tree)
+  const treeDiv = treeToHTML(tree, false);
   treeDiv.classList.add("example-tree");
   replDiv.appendChild(treeDiv);
 

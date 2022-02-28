@@ -14,7 +14,7 @@ function getContainer(elem) {
 }
 
 function addGoal(expr, elem) {
-  const exDiv = goalToHTML({ goal: expr });
+  const exDiv = goalToHTML({ goal: expr }, true);
   exDiv.classList.add("main");
   const container = getContainer(elem);
   container.appendChild(exDiv);
@@ -41,7 +41,7 @@ const dragMoveModifiers = [
   })
 ];
 
-interact('.bernays .main.goal, .bernays .tree:not(.example-tree) .goal, .tree:not(.example-tree) .assumption').draggable({
+interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggable({
   manualStart: true,
   listeners: {
     move: dragMoveListeners.move,
@@ -85,7 +85,7 @@ interact('.bernays .main.goal, .bernays .tree:not(.example-tree) .goal, .tree:no
       if ('assumption' in tree) {
         const expr = tree.assumption;
         const goalTree = { goal: expr, parent: tree.parent };
-        const goalDiv = goalToHTML(goalTree);
+        const goalDiv = goalToHTML(goalTree, true);
         updateSubtree(tree.parent, tree, goalTree);
         elem.parentNode.replaceChild(goalDiv, elem);
 
@@ -142,7 +142,7 @@ document.addEventListener('keydown', updateCursor);
 document.addEventListener('keyup', updateCursor);
 document.addEventListener('visibilitychange', updateCursor);
 
-interact('.bernays .tree:not(.example-tree) .conclusion > div').draggable({
+interact('.bernays .conclusion.interactive > div').draggable({
   manualStart: true,
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
@@ -191,7 +191,7 @@ interact('.bernays .tree:not(.example-tree) .conclusion > div').draggable({
       }
       var dx = mainDiv.offsetWidth;
 
-      const goalDiv = goalToHTML(goal);
+      const goalDiv = goalToHTML(goal, true);
       if (is_naked_goal) {
         goalDiv.classList.add("main");
         moveMainDiv(goalDiv, conclusion_x, parseFloat(elem.getAttribute('data-y')));
@@ -204,7 +204,7 @@ interact('.bernays .tree:not(.example-tree) .conclusion > div').draggable({
       moveMainDiv(mainDiv, dx, 0);
 
 
-      const newDiv = treeToHTML(tree);
+      const newDiv = treeToHTML(tree, true);
       newDiv.classList.add("main");
 
       container.appendChild(newDiv);
@@ -278,7 +278,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           if (parentTree) {
             updateSubtree(parentTree, event.target.bernays.tree, newSubtree);
           }
-          const newDiv = treeToHTML(newSubtree);
+          const newDiv = treeToHTML(newSubtree, true);
 
           var mainDiv = event.target;
           while (!mainDiv.classList.contains("main")) {
@@ -343,7 +343,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       console.assert(parentTree, "Parent of discharged goal was not set.");
       const assumptionTree = { assumption: dragExpr, parent: parentTree };
       updateSubtree(parentTree, tree, assumptionTree);
-      const assumptionDiv = assumptionToHTML(assumptionTree);
+      const assumptionDiv = assumptionToHTML(assumptionTree, true);
       event.target.remove();
       contextDiv.appendChild(assumptionDiv);
     }
@@ -385,7 +385,7 @@ interact('.bernays .menu .item').draggable({
 }).on('move', function (event) {
   var interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
-    const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule));
+    const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule), true);
     elem.classList.add("main");
     const container = getContainer(event.currentTarget);
     container.appendChild(elem);
@@ -421,7 +421,7 @@ interact('.bernays :not(.current) .discharge').draggable({
   var interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
 
-    const elem = assumptionToHTML({ assumption: event.currentTarget.bernays.expr });
+    const elem = assumptionToHTML({ assumption: event.currentTarget.bernays.expr }, true);
     elem.bernays = event.currentTarget.bernays;
     elem.classList.add("main");
 
