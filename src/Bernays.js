@@ -235,9 +235,26 @@ function moveMainDiv(div, dx, dy) {
   div.style.bottom = y + 'px';
 }
 
+function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, draggable, draggableElement) {
+  const dropBoundingRect = dropzoneElement.getBoundingClientRect();
+  const innerDraggableElem = draggableElement.classList.contains("tree") ? draggableElement.childNodes[2] : draggableElement;
+  const dragBoundRect = innerDraggableElem.getBoundingClientRect();
+
+  const dragCenter = {
+    x: dragBoundRect.left + dragBoundRect.width / 2,
+    y: dragBoundRect.top + dragBoundRect.height / 2
+  };
+
+  if (dragCenter.x < dropBoundingRect.left || dragCenter.x > dropBoundingRect.right ||
+      dragCenter.y < dropBoundingRect.top || dragCenter.y > dropBoundingRect.bottom) {
+    return false;
+  }
+  return true;
+}
+
 interact('.bernays .goal:not(.current .goal)').dropzone({
   accept: '.main.tree, .main.assumption',
-  overlap: 'pointer',
+  checker: dropChecker,
   ondropactivate(event) {
     const dropGoal = event.target.bernays.tree.goal;
     if (event.relatedTarget.classList.contains("tree")) {
@@ -357,7 +374,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
 
 interact('.bernays .trash').dropzone({
   accept: '.main',
-  overlap: 'pointer',
+  checker: dropChecker,
   ondropactivate(event) {
     event.target.classList.add("active");
   },
