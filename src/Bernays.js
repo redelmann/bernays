@@ -94,7 +94,6 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
         var current = goalDiv;
         while (!current.classList.contains("main")) {
           current = current.parentNode;
-          console.log(current.classList.contains("tree") && current.bernays.tree.discharge);
           if (current.classList.contains("tree") && 
               current.bernays.tree.discharge &&
               exprEqual(expr, current.bernays.tree.discharge)) {
