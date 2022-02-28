@@ -40,6 +40,10 @@
   filter: var(--shadow-filter);
 }
 
+.bernays .current, .bernays .current * {
+  cursor: none !important;
+}
+
 .bernays .current > .conclusion > div {
   border: var(--border-size) dashed var(--border-color-active);
   background: #F9F0C1;
