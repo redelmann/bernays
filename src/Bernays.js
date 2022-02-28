@@ -238,7 +238,7 @@ function moveMainDiv(div, dx, dy) {
 
 interact('.bernays .goal:not(.current .goal)').dropzone({
   accept: '.main.tree, .main.assumption',
-  overload: 0.6,
+  overlap: 'pointer',
   ondropactivate(event) {
     const dropGoal = event.target.bernays.tree.goal;
     if (event.relatedTarget.classList.contains("tree")) {
@@ -358,7 +358,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
 
 interact('.bernays .trash').dropzone({
   accept: '.main',
-  overload: 0.6,
+  overlap: 'pointer',
   ondropactivate(event) {
     event.target.classList.add("active");
   },
@@ -404,7 +404,7 @@ interact('.bernays .menu .item').draggable({
   }
 });
 
-interact('.bernays :not(.current) .discharge').draggable({
+interact('.bernays :not(.current) .discharge.interactive').draggable({
   manualStart: true,
   listeners: {
     move: dragMoveListeners.move,
