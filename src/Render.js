@@ -139,12 +139,12 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   const cancelButton = document.createElement("a");
   cancelButton.classList.add("cancel");
   cancelButton.appendChild(document.createTextNode(_("cancel")));
-  cancelButton.addEventListener("click", function(event) {
+  cancelButton.addEventListener("click", function() {
     onCancel();
   });
   controlsDiv.appendChild(cancelButton);
 
-  function checkDone(event) {
+  function checkDone() {
     if (!exprInput.bernays.is_valid) {
       exprInput.focus();
       return;
@@ -247,12 +247,12 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   const cancelButton = document.createElement("a");
   cancelButton.classList.add("cancel");
   cancelButton.appendChild(document.createTextNode(_("cancel")));
-  cancelButton.addEventListener("click", function(event) {
+  cancelButton.addEventListener("click", function() {
     onCancel();
   });
   controlsDiv.appendChild(cancelButton);
 
-  function checkDone(event) {
+  function checkDone() {
     const newReplacements = {};
 
     for (const [key, exprInput] of exprInputs) {
@@ -313,7 +313,7 @@ export function exprInputHTML(defaultExpr) {
     exprInput.setAttribute("value", "");
     exprInput.bernays = { expr: null, is_valid: false };
   }
-  exprInput.addEventListener("change", function(event) {
+  exprInput.addEventListener("change", function() {
     try {
       const tokens = tokenize(exprInput.value);
       const expr = parse(tokens);
@@ -325,7 +325,7 @@ export function exprInputHTML(defaultExpr) {
       exprInput.classList.add("invalid");
     }
   });
-  exprInput.addEventListener("input", function(event) {
+  exprInput.addEventListener("input", function() {
     exprInput.classList.remove("invalid");
   })
   return exprInput;

@@ -1,9 +1,11 @@
+import interact from 'interactjs';
 import {fuse, exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, updateUndischargedAssumptions} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
+import './Bernays.css';
 
 function getContainer(elem) {
   var container = elem;
@@ -475,19 +477,21 @@ interact('.bernays .new-goal').on('click', function(event) {
   dialogDiv.bernays.initFocus();
 });
 
-const containers = document.getElementsByClassName("bernays");
-
-for (const container of containers) {
-  const options = {};
-  if (container.hasAttribute('data-include-rules')) {
-    options.includeRules = new Set(container.getAttribute('data-include-rules').split(/\s+/));
+document.addEventListener("DOMContentLoaded", function () {
+  const containers = document.getElementsByClassName("bernays");
+  
+  for (const container of containers) {
+    const options = {};
+    if (container.hasAttribute('data-include-rules')) {
+      options.includeRules = new Set(container.getAttribute('data-include-rules').split(/\s+/));
+    }
+    if (container.hasAttribute('data-exclude-rules')) {
+      options.excludeRules = new Set(container.getAttribute('data-exclude-rules').split(/\s+/));
+    }
+    initUI(container, options);
+    if (container.hasAttribute('data-goal')) {
+      addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
+    }
   }
-  if (container.hasAttribute('data-exclude-rules')) {
-    options.excludeRules = new Set(container.getAttribute('data-exclude-rules').split(/\s+/));
-  }
-  initUI(container, options);
-  if (container.hasAttribute('data-goal')) {
-    addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
-  }
-}
+});
 
