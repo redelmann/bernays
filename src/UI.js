@@ -26,7 +26,7 @@ export function initUI(container, options) {
   }
 
   if (options && 'excludeRules' in options) {
-    for (var i = activeRules.length - 1; i >= 0; i--) {
+    for (i = activeRules.length - 1; i >= 0; i--) {
       const rule = activeRules[i];
       if (options.excludeRules.has(rule.code)) {
         activeRules.splice(i, 1);
