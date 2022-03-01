@@ -8,7 +8,7 @@ import {initUI} from './UI.js';
 import './Bernays.css';
 
 function getContainer(elem) {
-  var container = elem;
+  let container = elem;
   while (!container.classList.contains("bernays")) {
     container = container.parentNode;
   }
@@ -62,7 +62,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
   modifiers: dragMoveModifiers,
   autoScroll: true
 }).on('move', function (event) {
-  var interaction = event.interaction;
+  let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     if (event.altKey) {
       const elem = event.currentTarget;
@@ -70,10 +70,10 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
       const newElem = 'goal' in tree ? goalToHTML(tree, true) : assumptionToHTML(tree, true);
       const container = getContainer(event.currentTarget);
 
-      var x = 0;
-      var y = container.offsetHeight-elem.offsetHeight;
+      let x = 0;
+      let y = container.offsetHeight-elem.offsetHeight;
 
-      var current = elem;
+      let current = elem;
       while (current !== container) {
         x += current.offsetLeft;
         y -= current.offsetTop;
@@ -91,9 +91,9 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
         updateSubtree(tree.parent, tree, goalTree);
         elem.parentNode.replaceChild(goalDiv, elem);
 
-        var scopeDiv = null;
-        var treeDiv = null;
-        var current = goalDiv;
+        let scopeDiv = null;
+        let treeDiv = null;
+        let current = goalDiv;
         while (!current.classList.contains("main")) {
           current = current.parentNode;
           if (current.classList.contains("tree") && 
@@ -115,7 +115,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
       interaction.start({ name: 'drag' }, event.interactable, newElem);
     }
     else {
-      var elem = event.currentTarget;
+      let elem = event.currentTarget;
       while (elem && !elem.classList.contains("main")) {
         elem = elem.parentNode;
       }
@@ -149,11 +149,11 @@ interact('.bernays .conclusion.interactive > div').draggable({
   modifiers: dragMoveModifiers,
   autoScroll: true
 }).on('move', function(event) {
-  var interaction = event.interaction;
+  let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     if (event.altKey) {
-      var elem = event.currentTarget;
-      var conclusion_x = elem.offsetLeft;
+      let elem = event.currentTarget;
+      let conclusion_x = elem.offsetLeft;
       while (elem && !elem.classList.contains("tree")) {
         elem = elem.offsetParent;
         conclusion_x += elem.offsetLeft;
@@ -164,17 +164,17 @@ interact('.bernays .conclusion.interactive > div').draggable({
 
       const container = getContainer(elem);
 
-      var x = 0;
-      var y = container.offsetHeight-elem.offsetHeight;
+      let x = 0;
+      let y = container.offsetHeight-elem.offsetHeight;
 
-      var current = elem;
+      let current = elem;
       while (current !== container) {
         x += current.offsetLeft;
         y -= current.offsetTop;
         current = current.offsetParent;
       }
 
-      var is_naked_goal = false;
+      let is_naked_goal = false;
       if (tree.parent) {
         updateSubtree(tree.parent, tree, goal);
         tree.parent = null;
@@ -186,11 +186,11 @@ interact('.bernays .conclusion.interactive > div').draggable({
       updateUndischargedAssumptions(tree);
 
 
-      var mainDiv = elem;
+      let mainDiv = elem;
       while (!mainDiv.classList.contains("main")) {
         mainDiv = mainDiv.parentNode;
       }
-      var dx = mainDiv.offsetWidth;
+      let dx = mainDiv.offsetWidth;
 
       const goalDiv = goalToHTML(goal, true);
       if (is_naked_goal) {
@@ -217,7 +217,7 @@ interact('.bernays .conclusion.interactive > div').draggable({
       interaction.start({ name: 'drag' }, event.interactable, newDiv);
     }
     else {
-      var elem = event.currentTarget;
+      let elem = event.currentTarget;
       while (elem && !elem.classList.contains("main")) {
         elem = elem.parentNode;
       }
@@ -254,6 +254,42 @@ function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, dragg
   return true;
 }
 
+function update(event, dragTree, repls) {
+  const newSubtree = replaceInTree(dragTree, repls);
+  setParents(newSubtree);
+  const parentTree = event.target.bernays.tree.parent;
+  if (parentTree) {
+    updateSubtree(parentTree, event.target.bernays.tree, newSubtree);
+  }
+  const newDiv = treeToHTML(newSubtree, true);
+
+  let mainDiv = event.target;
+  while (!mainDiv.classList.contains("main")) {
+    mainDiv = mainDiv.parentNode;
+  }
+
+  const contextDiv = event.target.parentNode;
+  const x = parseFloat(event.target.getAttribute('data-x')) || 0;
+  const y = parseFloat(event.target.getAttribute('data-y')) || 0;
+  let dx = mainDiv.offsetWidth;
+  event.relatedTarget.remove();
+  event.target.remove();
+  contextDiv.appendChild(newDiv);
+  if (!parentTree) {
+    newDiv.classList.add("main");
+    mainDiv = newDiv;
+    moveMainDiv(newDiv, x, y);
+    dx -= 30;
+    if (newSubtree.discharge) {
+      dx += 60;
+    }
+  }
+  dx -= mainDiv.offsetWidth;
+  dx /= 2;
+  updateCursor(event);
+  moveMainDiv(mainDiv, dx, 0);
+}
+
 interact('.bernays .goal:not(.current .goal)').dropzone({
   accept: '.main.tree, .main.assumption',
   checker: dropChecker,
@@ -288,42 +324,6 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       
       const replacements = fuse(dropGoal, dragTree.conclusion);
       if (replacements) {
-        
-        function update(repls) {
-          const newSubtree = replaceInTree(dragTree, repls);
-          setParents(newSubtree);
-          const parentTree = event.target.bernays.tree.parent;
-          if (parentTree) {
-            updateSubtree(parentTree, event.target.bernays.tree, newSubtree);
-          }
-          const newDiv = treeToHTML(newSubtree, true);
-
-          var mainDiv = event.target;
-          while (!mainDiv.classList.contains("main")) {
-            mainDiv = mainDiv.parentNode;
-          }
-
-          const contextDiv = event.target.parentNode;
-          const x = parseFloat(event.target.getAttribute('data-x')) || 0;
-          const y = parseFloat(event.target.getAttribute('data-y')) || 0;
-          var dx = mainDiv.offsetWidth;
-          event.relatedTarget.remove();
-          event.target.remove();
-          contextDiv.appendChild(newDiv);
-          if (!parentTree) {
-            newDiv.classList.add("main");
-            mainDiv = newDiv;
-            moveMainDiv(newDiv, x, y);
-            dx -= 30;
-            if (newSubtree.discharge) {
-              dx += 60;
-            }
-          }
-          dx -= mainDiv.offsetWidth;
-          dx /= 2;
-          updateCursor(event);
-          moveMainDiv(mainDiv, dx, 0);
-        }
 
         const freeVars = freeMetaVariablesInTree(dragTree);
         for (const handled in replacements) {
@@ -334,7 +334,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           const dialog = replacementsDialogHTML(dragTree, replacements, freeVars, function(repls) {
             dialog.remove();
             container.bernays.hideModal();
-            update(repls);
+            update(event, dragTree, repls);
           }, function() {
             dialog.remove();
             container.bernays.hideModal();
@@ -344,7 +344,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
           dialog.bernays.initFocus();
         }
         else {
-          update(replacements);
+          update(event, dragTree, replacements);
         }
       }
     }
@@ -401,16 +401,16 @@ interact('.bernays .menu .item').draggable({
   modifiers: dragMoveModifiers,
   autoScroll: true
 }).on('move', function (event) {
-  var interaction = event.interaction;
+  let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule), true);
     elem.classList.add("main");
     const container = getContainer(event.currentTarget);
     container.appendChild(elem);
 
-    var x = event.currentTarget.offsetWidth / 2;
-    var y = container.offsetHeight - event.currentTarget.offsetHeight;
-    var current = event.currentTarget;
+    let x = event.currentTarget.offsetWidth / 2;
+    let y = container.offsetHeight - event.currentTarget.offsetHeight;
+    let current = event.currentTarget;
     while (current !== container) {
       x += current.offsetLeft;
       y -= current.offsetTop;
@@ -440,7 +440,7 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
   modifiers: [],
   autoScroll: true
 }).on('move', function (event) {
-  var interaction = event.interaction;
+  let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
 
     const elem = assumptionToHTML({ assumption: event.currentTarget.bernays.expr }, true);
@@ -450,7 +450,7 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
     elem.bernays.scopeDiv.classList.add("active-scope");
     elem.bernays.treeDiv.classList.add("has-current");
 
-    var treeDiv = event.currentTarget.bernays.treeDiv;
+    let treeDiv = event.currentTarget.bernays.treeDiv;
     treeDiv.appendChild(elem);
 
     const y = treeDiv.offsetHeight - event.currentTarget.offsetTop - event.currentTarget.offsetHeight;

@@ -24,7 +24,7 @@ export function pretty(expression) {
   }
 
   function prettyNegation(expr) {
-    var current = expr;
+    let current = expr;
     let pre = ""
     while (current.kind === "Not") {
       current = current.inner;
@@ -107,9 +107,9 @@ export function prettyHTML(expr) {
   }
 
   function prettyNegation(expr) {
-    var current = expr;
-    var parent = null;
-    var context = null;
+    let current = expr;
+    let parent = null;
+    let context = null;
     while (current.kind === "Not") {
       current = current.inner;
       if (!parent) {

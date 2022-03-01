@@ -15,11 +15,11 @@ const token_classes = [
 ];
 
 export function tokenize(string) {
-  var current = string;
+  let current = string;
   const tokens = [];
   while (current.length > 0) {
-    var max_length = null;
-    var max_tag = null;
+    let max_length = null;
+    let max_tag = null;
     
     token_classes.forEach(function(token_class) {
       const res = current.match(token_class.re);

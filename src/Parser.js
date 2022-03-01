@@ -29,7 +29,7 @@ export function parse(input) {
     if (consume("FALSE")) {
       return constant(false);
     }
-    var token = consume("META_ID");
+    let token = consume("META_ID");
     if (token) {
       return metaVariable(token.content);
     }
@@ -53,8 +53,8 @@ export function parse(input) {
     while (consume("NOT")) {
       n++;
     }
-    var res = parseAtom();
-    for(var i = 0; i < n; i++) {
+    let res = parseAtom();
+    for(let i = 0; i < n; i++) {
       res = not(res);
     }
     return res;

@@ -49,7 +49,7 @@ export function updateUndischargedAssumptions(tree) {
       return;
     }
     else {
-      var newExprs = exprs;
+      let newExprs = exprs;
       if (tree.discharge) {
         newExprs = newExprs.slice();
         newExprs.push(tree.discharge);
@@ -57,7 +57,7 @@ export function updateUndischargedAssumptions(tree) {
       for (let i = 0; i < tree.hypotheses.length; i++) {
         go(tree.hypotheses[i], newExprs);
         if ('assumption' in tree.hypotheses[i]) {
-          var ok = false;
+          let ok = false;
           const assumption = tree.hypotheses[i].assumption;
           for (const expr of newExprs) {
             if (exprEqual(expr, assumption)) {
@@ -128,7 +128,7 @@ export function ruleToTree(rule) {
 }
 
 export function getRoot(tree) {
-  var res = tree;
+  let res = tree;
   while ('parent' in res) {
     res = res.parent;
   }
@@ -136,7 +136,7 @@ export function getRoot(tree) {
 }
 
 export function getContextDischarges(tree) {
-  var current = tree;
+  let current = tree;
   const res = [];
   while ('parent' in current) {
     current = current.parent;
