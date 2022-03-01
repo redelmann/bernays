@@ -1,5 +1,21 @@
 import {replace, freeMetaVariables, exprEqual} from './Expr.js';
 
+export function withoutParents(tree) {
+  if ('goal' in tree) {
+    return { goal: tree.goal };
+  }
+  if ('assumption' in tree) {
+    return { assumption: tree.assumption };
+  }
+
+  return {
+    rule: tree.rule,
+    conclusion: tree.conclusion,
+    hypotheses: tree.hypotheses.map(withoutParents),
+    discharge: tree.discharge
+  };
+}
+
 export function setParents(tree) {
   if (!('hypotheses' in tree)) {
     return;

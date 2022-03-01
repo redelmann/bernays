@@ -6,6 +6,7 @@ import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleT
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 import './Bernays.css';
+import {loadState, saveState} from './Pickler.js';
 
 function getContainer(elem) {
   let container = elem;
@@ -489,9 +490,24 @@ document.addEventListener("DOMContentLoaded", function () {
       options.excludeRules = new Set(container.getAttribute('data-exclude-rules').split(/\s+/));
     }
     initUI(container, options);
-    if (container.hasAttribute('data-goal')) {
+    const saved_state = loadState(container);
+    if (saved_state) {
+      for (const elem of saved_state) {
+        const treeDiv = 'goal' in elem.tree ? goalToHTML(elem.tree, true) : treeToHTML(elem.tree, true);
+        treeDiv.classList.add("main");
+        container.appendChild(treeDiv);
+        moveMainDiv(treeDiv, elem.x, elem.y);
+      }
+    }
+    else if (container.hasAttribute('data-goal')) {
       addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
     }
   }
 });
 
+window.addEventListener("beforeunload", function () {
+  const containers = document.getElementsByClassName("bernays");
+  for (const container of containers) {
+    saveState(container);
+  }
+});
