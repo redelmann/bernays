@@ -9,7 +9,7 @@ const token_classes = [
   { re: /^(\||⋁|\\\/)/, tag: "OR"},
   { re: /^(=>|⇒)/, tag: "IMPLIES"},
   { re: /^(<=>|⇔)/, tag: "IFF"},
-  { re: /^(\~|¬)/, tag: "NOT"},
+  { re: /^(~|¬)/, tag: "NOT"},
   { re: /^(\()/, tag: "OPEN" },
   { re: /^(\))/, tag: "CLOSE" }
 ];
