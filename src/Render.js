@@ -278,7 +278,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   controlsDiv.appendChild(confirmButton);
   replDiv.appendChild(controlsDiv);
 
-  for (var i = 0; i < exprInputs.length - 1; i++) {
+  for (let i = 0; i < exprInputs.length - 1; i++) {
     const exprInput = exprInputs[i][1];
     const nextExprInput = exprInputs[i + 1][1];
 

@@ -54,7 +54,7 @@ export function updateUndischargedAssumptions(tree) {
         newExprs = newExprs.slice();
         newExprs.push(tree.discharge);
       }
-      for (var i = 0; i < tree.hypotheses.length; i++) {
+      for (let i = 0; i < tree.hypotheses.length; i++) {
         go(tree.hypotheses[i], newExprs);
         if ('assumption' in tree.hypotheses[i]) {
           var ok = false;
