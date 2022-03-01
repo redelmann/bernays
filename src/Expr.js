@@ -184,7 +184,7 @@ export function freeMetaVariables(expression) {
   return vars;
 }
 
-export function freeVariables() {
+export function freeVariables(expression) {
   const vars = new Set([]);
 
   function go(expr) {
