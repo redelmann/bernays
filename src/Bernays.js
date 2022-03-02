@@ -62,7 +62,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
   },
   modifiers: dragMoveModifiers,
   autoScroll: true
-}).on('move', function (event) {
+}).on('down', function (event) {
   let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     if (event.altKey) {
@@ -149,7 +149,7 @@ interact('.bernays .conclusion.interactive > div').draggable({
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
   autoScroll: true
-}).on('move', function(event) {
+}).on('down', function(event) {
   let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     if (event.altKey) {
@@ -401,7 +401,7 @@ interact('.bernays .menu .item').draggable({
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
   autoScroll: true
-}).on('move', function (event) {
+}).on('down', function (event) {
   let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
     const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule), true);
@@ -440,7 +440,7 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
   },
   modifiers: [],
   autoScroll: true
-}).on('move', function (event) {
+}).on('down', function (event) {
   let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
 
