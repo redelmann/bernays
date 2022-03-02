@@ -17,11 +17,11 @@ export function saveState(container) {
   }
 
   const encoded = JSON.stringify(elems);
-  localStorage.setItem(getKey(container), encoded);
+  sessionStorage.setItem(getKey(container), encoded);
 }
 
 export function loadState(container) {
-  const encoded = localStorage.getItem(getKey(container));
+  const encoded = sessionStorage.getItem(getKey(container));
   if (encoded) {
     const elems = JSON.parse(encoded);
     for (const elem of elems) {
