@@ -264,3 +264,66 @@ export function fuse(expr, pattern) {
   }
   return matches;
 }
+
+function updateUnifier(unifier, key, value) {
+  for (const k in unifier) {
+    unifier[k] = replace(unifier[k], { [key]: value });
+  }
+  unifier[key] = replace(value, unifier);
+}
+
+export function unify(expr_1, expr_2) {
+  const unifier = {};
+  const queue = [];
+  queue.push([expr_1, expr_2]);
+  while (queue.length > 0) {
+    const [e1, e2] = queue.shift();
+    if (exprEqual(e1, e2)) {
+      continue;
+    }
+    if (e1.kind === MetaVariable) {
+      if (freeMetaVariables(e2).has(e1.name)) {
+        return null;
+      }
+
+      if (e1.name in unifier) {
+        queue.push([e2, unifier[e1.name]]);
+      }
+      else {
+        updateUnifier(unifier, e1.name, e2);
+      }
+    }
+    else if (e2.kind === MetaVariable) {
+      if (freeMetaVariables(e1).has(e2.name)) {
+        return null;
+      }
+
+      if (e2.name in unifier) {
+        queue.push([e1, unifier[e2.name]]);
+      }
+      else {
+        updateUnifier(unifier, e2.name, e1);
+      }
+    }
+    else {
+      if (e1.kind !== e2.kind) {
+        return null;
+      }
+
+      // At this point, e1 and e2 are not strictly equal.
+      if (e1.kind === "Constant" || e1.kind === "Variable") {
+        return null;
+      }
+
+      if (e1.kind === "Not") {
+        queue.push([e1.inner, e2.inner]);
+      }
+      else {
+        queue.push([e1.left, e2.left]);
+        queue.push([e1.right, e2.right]);
+      }
+    }
+    
+  }
+  return unifier;
+}
