@@ -454,6 +454,40 @@ document.addEventListener("DOMContentLoaded", function () {
     else if (container.hasAttribute('data-goal')) {
       addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
     }
+
+    container.bernays.counter = 0;
+
+    container.addEventListener("dragenter", function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      container.bernays.counter++;
+      if (container.bernays.counter === 1) {
+        container.bernays.showModal();
+      }
+    });
+
+    container.addEventListener("dragover", function(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+    });
+
+    container.addEventListener("dragleave", function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      container.bernays.counter--;
+      if (container.bernays.counter === 0) {
+        container.bernays.hideModal();
+      }
+    });
+
+    container.addEventListener("drop", function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      container.bernays.counter = 0;
+      container.bernays.hideModal();
+      const fileList = event.dataTransfer.files;
+      console.log(fileList);
+    });
   }
 });
 
