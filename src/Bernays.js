@@ -256,7 +256,7 @@ function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, dragg
 }
 
 interact('.bernays .goal:not(.current .goal)').dropzone({
-  accept: '.main.tree, .main.assumption',
+  accept: '.main.tree, .main.assumption, .main.goal',
   checker: dropChecker,
   ondropactivate(event) {
     const dropGoal = event.target.bernays.tree;
