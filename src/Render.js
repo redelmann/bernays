@@ -170,7 +170,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   return dialogDiv;
 }
 
-export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel) {
+export function replacementsDialogHTML(missing, onValidate, onCancel) {
 
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
@@ -179,38 +179,8 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   titleElem.appendChild(document.createTextNode(_("choose_replacements")));
   replDiv.appendChild(titleElem);
 
-  const explanationsParagraph = document.createElement("p");
-  explanationsParagraph.appendChild(document.createTextNode(_("select_metavariables")));
-  replDiv.appendChild(explanationsParagraph);
-
-  const treeDiv = treeToHTML(tree, false);
-  treeDiv.classList.add("example-tree");
-  replDiv.appendChild(treeDiv);
-
   const tableElem = document.createElement("table");
   replDiv.appendChild(tableElem);
-
-  for (const key in done) {
-    const rowElem = document.createElement("tr");
-    rowElem.classList.add("done");
-
-    const varElem = document.createElement("td");
-    varElem.classList.add("var");
-    varElem.appendChild(prettyHTML(metaVariable(key)));
-    rowElem.appendChild(varElem);
-
-    const toElem = document.createElement("td");
-    toElem.classList.add("to");
-    toElem.appendChild(document.createTextNode("↦"));
-    rowElem.appendChild(toElem);
-
-    const exprElem = document.createElement("td");
-    exprElem.classList.add("value");
-    exprElem.appendChild(prettyHTML(done[key]));
-    rowElem.appendChild(exprElem);
-
-    tableElem.appendChild(rowElem);
-  }
 
   const exprInputs = [];
 
@@ -262,10 +232,6 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
       }
       newReplacements[key] = exprInput.bernays.expr;
     }
-
-    for (const key in done) {
-      newReplacements[key] = done[key];
-    }
     
     onValidate(newReplacements);
   }
@@ -292,7 +258,7 @@ export function replacementsDialogHTML(tree, done, missing, onValidate, onCancel
   }
 
   const lastExprInput = exprInputs[exprInputs.length - 1][1];
-  lastExprInput.addEventListener("keyup", function() {
+  lastExprInput.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
       checkDone(event);
     }

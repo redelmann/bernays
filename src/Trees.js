@@ -1,4 +1,4 @@
-import {replace, freeMetaVariables, exprEqual} from './Expr.js';
+import {replace, freeMetaVariables, metaVariable, exprEqual, unify} from './Expr.js';
 
 export function withoutParents(tree) {
   if ('goal' in tree) {
@@ -130,6 +130,87 @@ export function freeMetaVariablesInTree(tree) {
 
   go(tree);
   return res;
+}
+
+function nextName(name) {
+  if (name === 'Z') {
+    return 'X1';
+  }
+  else if (name.length === 1) {
+    return String.fromCharCode(name.charCodeAt(0) + 1);
+  }
+  else {
+    const number = parseInt(name.slice(1));
+    return name.slice(0, 1) + (number + 1);
+  }
+}
+
+function freshenMetaVariablesInTree(tree, otherTree) {
+  const treeMetaVars = freeMetaVariablesInTree(tree);
+  const otherTreeMetaVars = freeMetaVariablesInTree(otherTree);
+  const conflicts = new Set([]);
+  const used = new Set(otherTreeMetaVars);
+  for (const treeMetaVar of treeMetaVars) {
+    if (otherTreeMetaVars.has(treeMetaVar)) {
+      conflicts.add(treeMetaVar);
+    }
+    used.add(treeMetaVar);
+  }
+  const replacements = {};
+  var next = "A";
+  for (const conflict of conflicts) {
+    while (used.has(next)) {
+      next = nextName(next);
+    }
+    replacements[conflict] = metaVariable(next);
+    used.add(next);
+  }
+
+  return replaceInTree(tree, replacements);
+}
+
+export function mergeWithGoal(tree, goal) {
+  let goalTree = goal;
+  while (goalTree.parent) {
+    goalTree = goalTree.parent;
+  }
+
+  // We do not want to rename metavariables in case of an assumption,
+  // as the assumption comes from the same namespace.
+  const renamedTree = 'assumption' in tree ? tree : freshenMetaVariablesInTree(tree, goalTree);
+  const goalExpr = goal.goal;
+  let renamedTreeExpr;
+  if ('goal' in renamedTree) {
+    renamedTreeExpr = renamedTree.goal;
+  }
+  else if ('assumption' in renamedTree) {
+    renamedTreeExpr = renamedTree.assumption;
+  }
+  else {
+    renamedTreeExpr = renamedTree.conclusion;
+  }
+
+  const unifier = unify(renamedTreeExpr, goalExpr);
+  if (unifier === null) {
+    return null;
+  }
+  return [renamedTree, goal, goalTree, unifier];
+}
+
+export function finalizeMergeWithGoal(savedValues) {
+  let [renamedTree, goal, goalTree, unifier] = savedValues;
+
+  let newTree;
+  if (goal.parent) {
+    updateSubtree(goal.parent, goal, renamedTree);
+    newTree = replaceInTree(goalTree, unifier);
+  }
+  else {
+    newTree = replaceInTree(renamedTree, unifier);
+  }
+
+  setParents(newTree);
+  return newTree;
 }
 
 export function ruleToTree(rule) {

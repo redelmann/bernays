@@ -1,9 +1,9 @@
 import interact from 'interactjs';
-import {fuse, exprEqual} from './Expr.js';
+import {exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
-import {setParents, replaceInTree, freeMetaVariablesInTree, updateSubtree, ruleToTree, updateUndischargedAssumptions} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, replacementsDialogHTML} from './Render.js';
+import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 import './Bernays.css';
 import {loadState, saveState} from './Pickler.js';
@@ -255,62 +255,16 @@ function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, dragg
   return true;
 }
 
-function update(event, dragTree, repls) {
-  const newSubtree = replaceInTree(dragTree, repls);
-  setParents(newSubtree);
-  const parentTree = event.target.bernays.tree.parent;
-  if (parentTree) {
-    updateSubtree(parentTree, event.target.bernays.tree, newSubtree);
-  }
-  const newDiv = treeToHTML(newSubtree, true);
-
-  let mainDiv = event.target;
-  while (!mainDiv.classList.contains("main")) {
-    mainDiv = mainDiv.parentNode;
-  }
-
-  const contextDiv = event.target.parentNode;
-  const x = parseFloat(event.target.getAttribute('data-x')) || 0;
-  const y = parseFloat(event.target.getAttribute('data-y')) || 0;
-  let dx = mainDiv.offsetWidth;
-  event.relatedTarget.remove();
-  event.target.remove();
-  contextDiv.appendChild(newDiv);
-  if (!parentTree) {
-    newDiv.classList.add("main");
-    mainDiv = newDiv;
-    moveMainDiv(newDiv, x, y);
-    dx -= 30;
-    if (newSubtree.discharge) {
-      dx += 60;
-    }
-  }
-  dx -= mainDiv.offsetWidth;
-  dx /= 2;
-  updateCursor(event);
-  moveMainDiv(mainDiv, dx, 0);
-}
-
 interact('.bernays .goal:not(.current .goal)').dropzone({
   accept: '.main.tree, .main.assumption',
   checker: dropChecker,
   ondropactivate(event) {
-    const dropGoal = event.target.bernays.tree.goal;
-    if (event.relatedTarget.classList.contains("tree")) {
-      const dragTree = event.relatedTarget.bernays.tree;
-      if(fuse(dropGoal, dragTree.conclusion)) {
-        event.target.classList.add("active");
-      }
-    }
-    else {
-      if (!event.relatedTarget.bernays.scopeDiv.contains(event.target)) {
-        return;
-      }
-      const dragExpr = event.relatedTarget.bernays.expr;
-      const dropGoal = event.target.bernays.tree.goal;
-      if(exprEqual(dropGoal, dragExpr)) {
-        event.target.classList.add("active");
-      }
+    const dropGoal = event.target.bernays.tree;
+    const dragTree = event.relatedTarget.bernays.tree;
+    const savedValues = mergeWithGoal(dragTree, dropGoal);
+    if(savedValues) {
+      event.target.bernays.savedValues = savedValues;
+      event.target.classList.add("active");
     }
   },
   ondragenter(event) {
@@ -318,36 +272,32 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
   },
   ondrop(event) {
     event.target.classList.remove("over");
-    const dropGoal = event.target.bernays.tree.goal;
-
-    if (event.relatedTarget.classList.contains("tree")) {
-      const dragTree = event.relatedTarget.bernays.tree;
+    const dropGoal = event.target.bernays.tree.goal;     
+    const savedValues = event.target.bernays.savedValues;
+    if (savedValues) {
+      const newTree = finalizeMergeWithGoal(savedValues);
+      const newDiv = treeToHTML(newTree, true);
+      newDiv.classList.add("main");
       
-      const replacements = fuse(dropGoal, dragTree.conclusion);
-      if (replacements) {
-
-        const freeVars = freeMetaVariablesInTree(dragTree);
-        for (const handled in replacements) {
-          freeVars.delete(handled);
-        }
-        if (freeVars.size > 0) {
-          const container = getContainer(event.target);
-          const dialog = replacementsDialogHTML(dragTree, replacements, freeVars, function(repls) {
-            dialog.remove();
-            container.bernays.hideModal();
-            update(event, dragTree, repls);
-          }, function() {
-            dialog.remove();
-            container.bernays.hideModal();
-          });
-          container.bernays.showModal();
-          container.appendChild(dialog);
-          dialog.bernays.initFocus();
-        }
-        else {
-          update(event, dragTree, replacements);
-        }
+      let mainDiv = event.target;
+      while (!mainDiv.classList.contains("main")) {
+        mainDiv = mainDiv.parentNode;
       }
+      
+      const contextDiv = mainDiv.parentNode;
+      const x = parseFloat(mainDiv.getAttribute('data-x')) || 0;
+      const y = parseFloat(mainDiv.getAttribute('data-y')) || 0;
+      let dx = mainDiv.offsetWidth;
+      
+      event.relatedTarget.remove();
+      mainDiv.remove();
+      contextDiv.appendChild(newDiv);
+
+      moveMainDiv(newDiv, x, y);
+      dx -= newDiv.offsetWidth;
+      dx /= 2;
+      updateCursor(event);
+      moveMainDiv(newDiv, dx, 0);
     }
     else {
       const dragExpr = event.relatedTarget.bernays.expr;
@@ -444,8 +394,10 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
   let interaction = event.interaction;
   if (interaction.pointerIsDown && !interaction.interacting()) {
 
-    const elem = assumptionToHTML({ assumption: event.currentTarget.bernays.expr }, true);
+    const tree = { assumption: event.currentTarget.bernays.expr };
+    const elem = assumptionToHTML(tree, true);
     elem.bernays = event.currentTarget.bernays;
+    elem.bernays.tree = tree;
     elem.classList.add("main");
 
     elem.bernays.scopeDiv.classList.add("active-scope");
