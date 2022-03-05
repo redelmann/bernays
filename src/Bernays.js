@@ -342,7 +342,17 @@ interact('.bernays .trash').dropzone({
 
 interact('.bernays .menu .item').draggable({
   manualStart: true,
-  listeners: dragMoveListeners,
+  listeners: {
+    start: dragMoveListeners.start,
+    move: dragMoveListeners.move,
+    end(event) {
+      dragMoveListeners.end(event);
+      if (!event.target.parentNode) {
+        const container = getContainer(event.relatedTarget);
+        cancelSnapshot(container);
+      }
+    }
+  },
   modifiers: dragMoveModifiers,
   autoScroll: true
 }).on('down', function (event) {
