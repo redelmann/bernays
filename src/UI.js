@@ -53,11 +53,17 @@ export function initUI(container, options) {
   modalDiv.classList.add("modal");
   container.appendChild(modalDiv);
 
+  let modal_open = false;
   container.bernays = {
+    is_modal_open() {
+      return modal_open;
+    },
     showModal() {
+      modal_open = true;
       modalDiv.style.display = 'block';
     },
     hideModal() {
+      modal_open = false;
       modalDiv.style.display = 'none';
     }
   }

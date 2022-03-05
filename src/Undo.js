@@ -7,7 +7,6 @@ if (!window.bernays) {
 window.bernays.active_container = null;
 
 export function snapshot(container) {
-    console.log("snapshot");
     window.bernays.active_container = container;
     if (!container.bernays.undo_stack) {
         container.bernays.undo_stack = [];
@@ -21,7 +20,6 @@ export function snapshot(container) {
 } 
 
 export function cancelSnapshot(container) {
-    console.log("cancelSnapshot");
     if (container.bernays.undo_stack.length > 0) {
         container.bernays.undo_stack.pop();
     }
@@ -47,7 +45,10 @@ export function undo(container) {
 
 export function canUndo(container) {
     const activeContainer = container || window.bernays.active_container;
-    return activeContainer && activeContainer.bernays.undo_stack && activeContainer.bernays.undo_stack.length > 0;
+    return activeContainer && 
+           !activeContainer.bernays.is_modal_open() &&
+           activeContainer.bernays.undo_stack &&
+           activeContainer.bernays.undo_stack.length > 0;
 }
 
 export function redo(container) {
@@ -70,5 +71,8 @@ export function redo(container) {
 
 export function canRedo(container) {
     const activeContainer = container || window.bernays.active_container;
-    return activeContainer && activeContainer.bernays.redo_stack && activeContainer.bernays.redo_stack.length > 0;
+    return activeContainer &&
+           !activeContainer.bernays.is_modal_open() &&
+           activeContainer.bernays.redo_stack &&
+           activeContainer.bernays.redo_stack.length > 0;
 }
