@@ -190,7 +190,11 @@ export function mergeWithGoal(tree, goal) {
     renamedTreeExpr = renamedTree.conclusion;
   }
 
-  const unifier = unify(renamedTreeExpr, goalExpr);
+  // We use a different order in the case of assumptions
+  // to preserve the name of metavariables in the assumption if possible.
+  const unifier = 'assumption' in tree ? 
+    unify(goalExpr, renamedTreeExpr) :
+    unify(renamedTreeExpr, goalExpr);
   if (unifier === null) {
     return null;
   }
