@@ -340,7 +340,7 @@ interact('.bernays .trash').dropzone({
   }
 });
 
-interact('.bernays .menu .item').draggable({
+interact('.bernays .rules-menu .item').draggable({
   manualStart: true,
   listeners: {
     start: dragMoveListeners.start,

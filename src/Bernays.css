@@ -14,7 +14,7 @@
   white-space: nowrap;
 }
 
-.bernays .expr, .bernays .menu, .bernays .name {
+.bernays .expr, .bernays .rules-menu, .bernays .name {
   font-family: Monaco;
 }
 
@@ -185,14 +185,14 @@
   overflow: scroll;
 }
 
-.bernays .menu {
+.bernays .rules-menu {
   position: relative;
   z-index: 3;
   margin: 10px;
   width: fit-content;
 }
 
-.bernays .menu .item, .bernays .menu .new-goal {
+.bernays .rules-menu .item, .bernays .rules-menu .new-goal {
   width: 50px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -207,12 +207,12 @@
   pointer-events: auto;
 }
 
-.bernays .menu .new-goal {
+.bernays .rules-menu .new-goal {
   background: #A5C8E4;
   cursor: pointer;
 }
 
-.bernays .menu .new-goal:active {
+.bernays .rules-menu .new-goal:active {
   filter: brightness(1.3);
 }
 
@@ -221,7 +221,7 @@
   pointer-events: auto;
 }
 
-.bernays .menu :first-child {
+.bernays .rules-menu :first-child {
   margin-top: 0;
 }
 

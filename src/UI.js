@@ -1,9 +1,9 @@
 import {rules} from './Rules.js';
 
 export function initUI(container, options) {
-  const menuDiv = document.createElement("div");
-  menuDiv.classList.add("menu");
-  container.appendChild(menuDiv);
+  const rulesMenuDiv = document.createElement("div");
+  rulesMenuDiv.classList.add("rules-menu");
+  container.appendChild(rulesMenuDiv);
 
   const newGoalDiv = document.createElement("div");
   newGoalDiv.classList.add("new-goal");
@@ -12,7 +12,7 @@ export function initUI(container, options) {
   plusIcon.classList.add("fa", "fa-plus");
 
   newGoalDiv.appendChild(plusIcon);
-  menuDiv.appendChild(newGoalDiv);
+  rulesMenuDiv.appendChild(newGoalDiv);
 
   const activeRules = rules.slice();
 
@@ -39,7 +39,7 @@ export function initUI(container, options) {
     itemDiv.bernays = { rule: rule };
     itemDiv.classList.add("item");
     itemDiv.appendChild(document.createTextNode(rule.name));
-    menuDiv.appendChild(itemDiv);
+    rulesMenuDiv.appendChild(itemDiv);
   }
 
   const trashDiv = document.createElement("div");
