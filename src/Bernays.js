@@ -6,7 +6,7 @@ import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal,
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, restoreState} from './State.js';
-import {undo, redo, snapshot, cancelSnapshot} from './Undo.js';
+import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
 import {moveMainDiv} from './Utils.js';
 import './Bernays.css';
 
@@ -270,7 +270,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
     const savedValues = event.target.bernays.savedValues;
     if (savedValues) {
       const newTree = finalizeMergeWithGoal(savedValues);
-      const newDiv = treeToHTML(newTree, true);
+      const newDiv = 'goal' in newTree ? goalToHTML(newTree, true) : treeToHTML(newTree, true);
       newDiv.classList.add("main");
       
       let mainDiv = event.target;
@@ -372,6 +372,7 @@ interact('.bernays .rules-menu .item').draggable({
     while (current !== container) {
       x += current.offsetLeft;
       y -= current.offsetTop;
+      y += current.scrollTop;
       current = current.offsetParent;
     }
     
@@ -463,6 +464,18 @@ document.addEventListener("DOMContentLoaded", function () {
       addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
     }
 
+    container.bernays.menu['about'].classList.add('disabled');
+    container.bernays.menu['help'].classList.add('disabled');
+    container.bernays.menu['settings'].classList.add('disabled');
+    container.bernays.menu['save'].classList.add('disabled');
+    container.bernays.menu['load'].classList.add('disabled');
+
+    container.bernays.menu['undo'].classList.add('disabled');
+    container.bernays.menu['redo'].classList.add('disabled');
+
+    container.bernays.menu['undo'].addEventListener('click', function () { undo(container); });
+    container.bernays.menu['redo'].addEventListener('click', function () { redo(container); });
+
     container.bernays.counter = 0;
 
     container.addEventListener("dragenter", function(event) {
@@ -508,12 +521,16 @@ window.addEventListener("beforeunload", function () {
 
 window.addEventListener("keyup", function (event) {
   if ((event.key === "z" || event.key === "Z") && event.ctrlKey) {
+    const container = getActiveContainer();
+    if (!container || container.querySelector(".current")) {
+      return;
+    }
     if (event.shiftKey) {
-      if (redo()) {
+      if (redo(container)) {
         event.preventDefault();
       }
     }
-    else if (undo()) {
+    else if (undo(container)) {
       event.preventDefault();
     }
   }

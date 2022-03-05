@@ -6,6 +6,10 @@ if (!window.bernays) {
 }
 window.bernays.active_container = null;
 
+export function getActiveContainer() {
+  return window.bernays.active_container;
+}
+
 export function snapshot(container) {
   window.bernays.active_container = container;
   if (!container.bernays.undo_stack) {
@@ -17,29 +21,51 @@ export function snapshot(container) {
   }
   container.bernays.undo_stack.push(elems);
   container.bernays.redo_stack = [];
+
+  if (container.bernays.menu) {
+    container.bernays.menu.undo.classList.remove('disabled');
+    container.bernays.menu.redo.classList.add('disabled');
+  }
 } 
 
 export function cancelSnapshot(container) {
+  window.bernays.active_container = container;
   if (container.bernays.undo_stack.length > 0) {
     container.bernays.undo_stack.pop();
+  }
+
+  if (container.bernays.menu) {
+    if (container.bernays.undo_stack.length > 0) {
+      container.bernays.menu.undo.classList.remove('disabled');
+    }
+    else {
+      container.bernays.menu.undo.classList.add('disabled');
+    }
+    container.bernays.menu.redo.classList.add('disabled');
   }
 }
 
 export function undo(container) {
-  const activeContainer = container || window.bernays.active_container;
-  if (!canUndo(activeContainer)) {
+  if (!canUndo(container)) {
     return false;
   }
-  window.bernays.active_container = activeContainer;
+  window.bernays.active_container = container;
 
-  const oldElems = getState(activeContainer);
+  const oldElems = getState(container);
   for (const elem of oldElems) {
     setParents(elem.tree);
   }
-  activeContainer.bernays.redo_stack.push(oldElems);
+  container.bernays.redo_stack.push(oldElems);
 
-  const elems = activeContainer.bernays.undo_stack.pop();
-  restoreState(activeContainer, elems);
+  const elems = container.bernays.undo_stack.pop();
+  restoreState(container, elems);
+
+  if (container.bernays.menu) {
+    container.bernays.menu.redo.classList.remove('disabled');
+    if (container.bernays.undo_stack.length === 0) {
+      container.bernays.menu.undo.classList.add('disabled');
+    }
+  }
   return true;
 }
 
@@ -52,20 +78,27 @@ export function canUndo(container) {
 }
 
 export function redo(container) {
-  const activeContainer = container || window.bernays.active_container;
-  if (!canRedo(activeContainer)) {
+  if (!canRedo(container)) {
     return false;
   }
-  window.bernays.active_container = activeContainer;
+  window.bernays.active_container = container;
 
-  const oldElems = getState(activeContainer);
+  const oldElems = getState(container);
   for (const elem of oldElems) {
     setParents(elem.tree);
   }
-  activeContainer.bernays.undo_stack.push(oldElems);
+  container.bernays.undo_stack.push(oldElems);
 
-  const elems = activeContainer.bernays.redo_stack.pop();
-  restoreState(activeContainer, elems);
+  const elems = container.bernays.redo_stack.pop();
+  restoreState(container, elems);
+
+  if (container.bernays.menu) {
+    container.bernays.menu.undo.classList.remove('disabled');
+    if (container.bernays.redo_stack.length === 0) {
+      container.bernays.menu.redo.classList.add('disabled');
+    }
+  }
+  
   return true;
 }
 

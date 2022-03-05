@@ -125,7 +125,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   dialogDiv.classList.add("dialog");
 
   const titleElem = document.createElement("h1");
-  titleElem.appendChild(document.createTextNode(_("new_goal")));
+  titleElem.appendChild(document.createTextNode(_("new-goal")));
   dialogDiv.appendChild(titleElem);
 
   const exprInput = exprInputHTML();

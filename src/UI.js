@@ -1,18 +1,58 @@
 import {rules} from './Rules.js';
+import {_} from './Lang.js';
 
 export function initUI(container, options) {
+
+  const topMenuDiv = document.createElement('div');
+  topMenuDiv.classList.add('top-menu');
+  container.appendChild(topMenuDiv);
+
+  const titleElem = document.createElement('h1');
+  titleElem.appendChild(document.createTextNode('Bernays'));
+  topMenuDiv.appendChild(titleElem);
+
+  const menuItems = [
+    { name: 'new-goal', icon: 'plus' },
+    { name: 'about', icon: 'info-circle' },
+    { name: 'help', icon: 'question-circle' },
+    { name: 'settings', icon: 'cog' },
+    null,
+    { name: 'undo', icon: 'undo' },
+    { name: 'redo', icon: 'repeat' },
+    { name: 'save', icon: 'save' },
+    { name: 'load', icon: 'upload' },
+  ];
+
+  const menuDivs = {};
+
+  for (const item of menuItems) {
+    if (item === null) {
+      const spacer = document.createElement('div');
+      spacer.classList.add('spacer');
+      topMenuDiv.appendChild(spacer);
+      continue;
+    }
+
+    const menuItemDiv = document.createElement('div');
+    menuItemDiv.classList.add('menu-item', item.name);
+
+    const iconDiv = document.createElement('i');
+    iconDiv.classList.add('fa', 'fa-' + item.icon);
+    menuItemDiv.appendChild(iconDiv);
+
+    const labelSpan = document.createElement('span');
+    labelSpan.classList.add('label');
+    labelSpan.appendChild(document.createTextNode(_(item.name)));
+    menuItemDiv.appendChild(labelSpan);
+
+    menuDivs[item.name] = menuItemDiv;
+
+    topMenuDiv.appendChild(menuItemDiv);
+  }
+
   const rulesMenuDiv = document.createElement("div");
   rulesMenuDiv.classList.add("rules-menu");
   container.appendChild(rulesMenuDiv);
-
-  const newGoalDiv = document.createElement("div");
-  newGoalDiv.classList.add("new-goal");
-
-  const plusIcon = document.createElement("i");
-  plusIcon.classList.add("fa", "fa-plus");
-
-  newGoalDiv.appendChild(plusIcon);
-  rulesMenuDiv.appendChild(newGoalDiv);
 
   const activeRules = rules.slice();
 
@@ -65,6 +105,7 @@ export function initUI(container, options) {
     hideModal() {
       modal_open = false;
       modalDiv.style.display = 'none';
-    }
+    },
+    menu: menuDivs,
   };
 }
