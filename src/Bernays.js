@@ -349,7 +349,9 @@ interact('.bernays .menu .item').draggable({
       dragMoveListeners.end(event);
       if (!event.target.parentNode) {
         const container = getContainer(event.relatedTarget);
-        cancelSnapshot(container);
+        if (container) {
+          cancelSnapshot(container);
+        }
       }
     }
   },
