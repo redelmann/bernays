@@ -66,5 +66,5 @@ export function initUI(container, options) {
       modal_open = false;
       modalDiv.style.display = 'none';
     }
-  }
+  };
 }

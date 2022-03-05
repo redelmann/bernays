@@ -65,7 +65,7 @@ export function treeToHTML(tree, is_interactive) {
       hypothesisDiv.appendChild(treeToHTML(subtree, is_interactive));
     }
     hypothesesDiv.appendChild(hypothesisDiv);
-  })
+  });
 
   const middleDiv = document.createElement('div');
   middleDiv.classList.add("middle");
@@ -165,7 +165,7 @@ export function newGoalDialogHTML(onValidate, onCancel) {
     if (event.key === "Enter") {
       checkDone(event);
     }
-  })
+  });
 
   return dialogDiv;
 }
@@ -254,7 +254,7 @@ export function replacementsDialogHTML(missing, onValidate, onCancel) {
           nextExprInput.select();
         }
       }
-    })
+    });
   }
 
   const lastExprInput = exprInputs[exprInputs.length - 1][1];
@@ -293,6 +293,6 @@ export function exprInputHTML(defaultExpr) {
   });
   exprInput.addEventListener("input", function() {
     exprInput.classList.remove("invalid");
-  })
+  });
   return exprInput;
 }

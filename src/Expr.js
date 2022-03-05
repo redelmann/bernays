@@ -13,22 +13,17 @@ export function exprEqual(left, right) {
     return false;
   }
   switch (left.kind) {
-    case "Variable": {
-      return left.name === right.name;
-    }
-    case "MetaVariable": {
-      return left.name === right.name;
-    }
-    case "Constant": {
-      return left.value === right.value;
-    }
-    case "Not": {
-      return exprEqual(left.inner, right.inner);
-    }
-    default: {
-      return exprEqual(left.left, right.left) &&
-             exprEqual(left.right, right.right);
-    }
+  case "Variable":
+    return left.name === right.name;
+  case "MetaVariable":
+    return left.name === right.name;
+  case "Constant":
+    return left.value === right.value;
+  case "Not":
+    return exprEqual(left.inner, right.inner);
+  default:
+    return exprEqual(left.left, right.left) &&
+            exprEqual(left.right, right.right);
   }
 }
 
@@ -123,33 +118,28 @@ export function replace(within, replacements) {
   }
 
   switch (within.kind) {
-    case "Variable": {
+  case "Variable":
+    return within;
+  case "MetaVariable":
+    if (within.name in replacements) {
+      return replacements[within.name];
+    }
+    else {
       return within;
     }
-    case "MetaVariable": {
-      if (within.name in replacements) {
-        return replacements[within.name];
-      }
-      else {
-        return within;
-      }
-    }
-    case "Constant": {
-      return within;
-    }
-    case "Not": {
-      return {
-        kind: within.kind,
-        inner: replace(within.inner, replacements)
-      }
-    }
-    default: {
-      return { 
-        kind: within.kind, 
-        left: replace(within.left, replacements), 
-        right: replace(within.right, replacements)
-      };
-    }
+  case "Constant":
+    return within;
+  case "Not":
+    return {
+      kind: within.kind,
+      inner: replace(within.inner, replacements)
+    };
+  default:
+    return { 
+      kind: within.kind, 
+      left: replace(within.left, replacements), 
+      right: replace(within.right, replacements)
+    };
   }
 }
 
@@ -158,25 +148,20 @@ export function freeMetaVariables(expression) {
 
   function go(expr) {
     switch(expr.kind) {
-      case "Variable": {
-        break;
-      }
-      case "MetaVariable": {
-        vars.add(expr.name);
-        break;
-      }
-      case "Constant": {
-        break;
-      }
-      case "Not": {
-        go(expr.inner);
-        break;
-      }
-      default: {
-        go(expr.left);
-        go(expr.right);
-        break;
-      }
+    case "Variable":
+      break;
+    case "MetaVariable":
+      vars.add(expr.name);
+      break;
+    case "Constant":
+      break;
+    case "Not":
+      go(expr.inner);
+      break;
+    default:
+      go(expr.left);
+      go(expr.right);
+      break;
     }
   }
 
@@ -189,25 +174,20 @@ export function freeVariables(expression) {
 
   function go(expr) {
     switch(expr.kind) {
-      case "Variable": {
-        vars.add(expr.name);
-        break;
-      }
-      case "MetaVariable": {
-        break;
-      }
-      case "Constant": {
-        break;
-      }
-      case "Not": {
-        go(expr.inner);
-        break;
-      }
-      default: {
-        go(expr.left);
-        go(expr.right);
-        break;
-      }
+    case "Variable":
+      vars.add(expr.name);
+      break;
+    case "MetaVariable":
+      break;
+    case "Constant":
+      break;
+    case "Not":
+      go(expr.inner);
+      break;
+    default:
+      go(expr.left);
+      go(expr.right);
+      break;
     }
   }
 
@@ -222,44 +202,39 @@ export function fuse(expr, pattern) {
   while (queue.length > 0) {
     const [e, p] = queue.shift();
     switch (p.kind) {
-      case "Variable": {
-        if (e.kind !== "Variable" || p.name !== e.name) {
+    case "Variable":
+      if (e.kind !== "Variable" || p.name !== e.name) {
+        return null;
+      }
+      break;
+    case "MetaVariable":
+      if (p.name in matches) {
+        if (!exprEqual(e, matches[p.name])) {
           return null;
         }
-        break;
       }
-      case "MetaVariable": {
-        if (p.name in matches) {
-          if (!exprEqual(e, matches[p.name])) {
-            return null;
-          }
-        }
-        else {
-          matches[p.name] = e;
-        }
-        break;
+      else {
+        matches[p.name] = e;
       }
-      case "Constant": {
-        if (e.kind !== "Constant" || p.value !== e.value) {
-          return null;
-        }
-        break;
+      break;
+    case "Constant":
+      if (e.kind !== "Constant" || p.value !== e.value) {
+        return null;
       }
-      case "Not": {
-        if (e.kind !== "Not") {
-          return null;
-        }
-        queue.push([e.inner, p.inner]);
-        break;
+      break;
+    case "Not":
+      if (e.kind !== "Not") {
+        return null;
       }
-      default: {
-        if (p.kind !== e.kind) {
-          return null;
-        }
-        queue.push([e.left, p.left]);
-        queue.push([e.right, p.right]);
-        break;
+      queue.push([e.inner, p.inner]);
+      break;
+    default:
+      if (p.kind !== e.kind) {
+        return null;
       }
+      queue.push([e.left, p.left]);
+      queue.push([e.right, p.right]);
+      break;
     }
   }
   return matches;

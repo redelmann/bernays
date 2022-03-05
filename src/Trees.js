@@ -94,7 +94,7 @@ export function updateUndischargedAssumptions(tree) {
 
 export function freeMetaVariablesInTree(tree) {
 
-  const res = new Set([])
+  const res = new Set([]);
 
   function go(subtree) {
     if ('goal' in subtree) {
