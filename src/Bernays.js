@@ -279,19 +279,26 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       }
       
       const contextDiv = mainDiv.parentNode;
-      const x = parseFloat(mainDiv.getAttribute('data-x')) || 0;
+      let x = parseFloat(mainDiv.getAttribute('data-x')) || 0;
       const y = parseFloat(mainDiv.getAttribute('data-y')) || 0;
       let dx = mainDiv.offsetWidth;
+
+      if (!mainDiv.classList.contains("tree") && newDiv.classList.contains("tree")) {
+        x -= 30;
+        dx += 30;
+        if (newTree.discharge) {
+          dx += 60;
+        }
+      }
       
       event.relatedTarget.remove();
       mainDiv.remove();
       contextDiv.appendChild(newDiv);
 
-      moveMainDiv(newDiv, x, y);
       dx -= newDiv.offsetWidth;
       dx /= 2;
       updateCursor(event);
-      moveMainDiv(newDiv, dx, 0);
+      moveMainDiv(newDiv, x + dx, y);
     }
     else {
       const dragExpr = event.relatedTarget.bernays.expr;
