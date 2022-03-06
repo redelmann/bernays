@@ -49,3 +49,40 @@ export function restoreState(container, state) {
     moveMainDiv(treeDiv, elem.x, elem.y);
   }
 }
+
+async function asyncSaveToFile(string) {
+  const file = await window.showSaveFilePicker({
+    types: [{
+      description: "Bernays",
+      accept: {
+        "text/plain": ['.brn']
+      }
+    }]
+  });
+
+  const writable = await file.createWritable();
+  await writable.write(string);
+  await writable.close();
+}
+
+function defaultSaveToFile(string) {
+  const blob = new Blob([string], {type: "text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bernays.brn';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function saveToFile(container) {
+  const elems = getState(container);
+  const string = JSON.stringify(elems);
+  
+  if (window.showSaveFilePicker) {
+    asyncSaveToFile(string);
+  }
+  else {
+    defaultSaveToFile(string);
+  }
+}
