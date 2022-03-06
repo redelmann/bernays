@@ -266,7 +266,6 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
   },
   ondrop(event) {
     event.target.classList.remove("over");
-    const dropGoal = event.target.bernays.tree.goal;     
     const savedValues = event.target.bernays.savedValues;
     if (savedValues) {
       const newTree = finalizeMergeWithGoal(savedValues);
@@ -300,29 +299,13 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       updateCursor(event);
       moveMainDiv(newDiv, x + dx, y);
     }
-    else {
-      const dragExpr = event.relatedTarget.bernays.expr;
-
-      if (!event.relatedTarget.bernays.scopeDiv.contains(event.target) || !exprEqual(dragExpr, dropGoal)) {
-        return;
-      }
-      
-      const tree = event.target.bernays.tree;
-      const contextDiv = event.target.parentNode;
-      const parentTree = tree.parent;
-      console.assert(parentTree, "Parent of discharged goal was not set.");
-      const assumptionTree = { assumption: dragExpr, parent: parentTree };
-      updateSubtree(parentTree, tree, assumptionTree);
-      const assumptionDiv = assumptionToHTML(assumptionTree, true);
-      event.target.remove();
-      contextDiv.appendChild(assumptionDiv);
-    }
   },
   ondragleave(event) {
     event.target.classList.remove("over");
   },
   ondropdeactivate(event) {
     event.target.classList.remove("active");
+    event.target.bernays.savedValues = null;
   }
 });
 
