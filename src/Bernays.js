@@ -5,7 +5,7 @@ import {parse} from './Parser.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
-import {loadState, saveState, restoreState, saveToFile} from './State.js';
+import {loadState, saveState, restoreState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
 import {moveMainDiv} from './Utils.js';
 import './Bernays.css';
@@ -474,7 +474,6 @@ document.addEventListener("DOMContentLoaded", function () {
     container.bernays.menu['about'].classList.add('disabled');
     container.bernays.menu['help'].classList.add('disabled');
     container.bernays.menu['settings'].classList.add('disabled');
-    container.bernays.menu['load'].classList.add('disabled');
 
     container.bernays.menu['undo'].classList.add('disabled');
     container.bernays.menu['redo'].classList.add('disabled');
@@ -484,6 +483,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     container.bernays.menu['save'].addEventListener('click', function () {
       saveToFile(container);
+    });
+    container.bernays.menu['load'].addEventListener('click', function () {
+      snapshot(container);
+      loadFromFile(container, true);
     });
 
     container.bernays.counter = 0;
@@ -517,7 +520,23 @@ document.addEventListener("DOMContentLoaded", function () {
       container.bernays.counter = 0;
       container.bernays.hideModal();
       const fileList = event.dataTransfer.files;
-      console.log(fileList);
+
+      if (fileList.length == 0) {
+        return;
+      }
+
+      snapshot(container);
+      if (!event.shiftKey) {
+        clearState(container);
+      }
+
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        file.text().then(function(text) {
+          const state = JSON.parse(text);
+          addState(container, state);
+        });
+      }
     });
   }
 });

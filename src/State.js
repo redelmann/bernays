@@ -39,9 +39,17 @@ export function loadState(container) {
 
 
 export function restoreState(container, state) {
+  clearState(container);
+  addState(container, state);
+}
+
+export function clearState(container) {
   for (const main of container.querySelectorAll(".main")) {
     main.remove();
   }
+}
+
+export function addState(container, state) {
   for (const elem of state) {
     const treeDiv = 'goal' in elem.tree ? goalToHTML(elem.tree, true) : treeToHTML(elem.tree, true);
     treeDiv.classList.add("main");
@@ -84,5 +92,54 @@ export function saveToFile(container) {
   }
   else {
     defaultSaveToFile(string);
+  }
+}
+
+async function asyncLoadFromFile(container, replace) {
+  const [handle] = await window.showOpenFilePicker({
+    types: [{
+      description: "Bernays",
+      accept: {
+        "text/plain": ['.brn']
+      }
+    }]
+  });
+
+  const file = await handle.getFile();
+  const string = await file.text();
+
+  const elems = JSON.parse(string);
+  if (replace) {
+    clearState(container);
+  }
+  addState(container, elems);
+}
+
+function defaultLoadFromFile(container, replace) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.brn';
+  input.onchange = function () {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+      const string = reader.result;
+      const elems = JSON.parse(string);
+      if (replace) {
+        clearState(container);
+      }
+      restoreState(container, elems);
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+export function loadFromFile(container, replace) {
+  if (window.showOpenFilePicker) {
+    asyncLoadFromFile(container, replace);
+  }
+  else {
+    defaultLoadFromFile(container, replace);
   }
 }
