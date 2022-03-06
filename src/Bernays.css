@@ -89,6 +89,10 @@
 }
 
 @media (max-width: 600px) {
+  .bernays .top-menu h1 {
+    display: none;
+  }
+
   .bernays .top-menu .new-goal span {
     display: none;
   }
@@ -365,7 +369,8 @@
 
 .bernays .dialog h1 {
   font-size: 16pt;
-  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .bernays .expr-input {
@@ -425,26 +430,28 @@
   padding-bottom: 5px;
   padding-left: 15px;
   padding-right: 15px;
-  background: white;
   border-radius: 15px;
   user-select: none;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-right: 3px solid rgba(0, 0, 0, 0.2);
-  border-bottom: 4px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #f0f0f0;
 }
 
 .bernays .dialog .controls a:hover {
-  filter: brightness(1.1);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .bernays .dialog .controls a:active {
-  margin-top: 2px;
-  margin-left: 1px;
-  border: 2px inset rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bernays .dialog .controls .cancel {
+  color: #333333;
 }
 
 .bernays .dialog .controls .confirm {
-  background: #F9F0C1;
+  color: black;
 }
 
 .bernays .metavariable {
