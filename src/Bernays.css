@@ -373,6 +373,11 @@
   margin-bottom: 20px;
 }
 
+.bernays .dialog p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
 .bernays .expr-input {
   padding-left: 4px;
   padding-right: 4px;

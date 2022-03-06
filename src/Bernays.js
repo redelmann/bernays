@@ -3,7 +3,7 @@ import {exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML} from './Render.js';
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, aboutDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, restoreState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
@@ -454,12 +454,20 @@ document.addEventListener("DOMContentLoaded", function () {
       addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
     }
 
-    container.bernays.menu['about'].classList.add('disabled');
     container.bernays.menu['help'].classList.add('disabled');
     container.bernays.menu['settings'].classList.add('disabled');
 
     container.bernays.menu['undo'].classList.add('disabled');
     container.bernays.menu['redo'].classList.add('disabled');
+
+    container.bernays.menu['about'].addEventListener('click', function() {
+      container.bernays.showModal();
+      const dialogDiv = aboutDialogHTML(function() {
+        container.bernays.hideModal();
+        dialogDiv.remove();
+      });
+      container.appendChild(dialogDiv);
+    });
 
     container.bernays.menu['undo'].addEventListener('click', function () { undo(container); });
     container.bernays.menu['redo'].addEventListener('click', function () { redo(container); });

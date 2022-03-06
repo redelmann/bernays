@@ -296,3 +296,46 @@ export function exprInputHTML(defaultExpr) {
   });
   return exprInput;
 }
+
+export function aboutDialogHTML(onClose) {
+  const aboutDiv = document.createElement("div");
+  aboutDiv.classList.add("dialog");
+
+  const titleElem = document.createElement("h1");
+  titleElem.appendChild(document.createTextNode(_("about")));
+  aboutDiv.appendChild(titleElem);
+
+  const textElem = document.createElement("p");
+  textElem.appendChild(document.createTextNode(_("about_text")));
+  aboutDiv.appendChild(textElem);
+
+  const creditsElem = document.createElement("p");
+  creditsElem.appendChild(document.createTextNode(_("about_credits")));
+  aboutDiv.appendChild(creditsElem);
+
+  const licenseElem = document.createElement("p");
+  licenseElem.appendChild(document.createTextNode(_("about_license")));
+  licenseElem.appendChild(document.createTextNode(" "));
+
+  const linkToRepoElem = document.createElement("a");
+  linkToRepoElem.setAttribute("href", "https://github.com/redelmann/bernays");
+  linkToRepoElem.setAttribute("target", "_blank");
+  linkToRepoElem.appendChild(document.createTextNode(_("about_source")));
+
+  licenseElem.appendChild(linkToRepoElem);
+  aboutDiv.appendChild(licenseElem);
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.classList.add("controls");
+
+  const closeButton = document.createElement("a");
+  closeButton.classList.add("cancel");
+  closeButton.appendChild(document.createTextNode(_("close")));
+  closeButton.addEventListener("click", function() {
+    onClose();
+  });
+  controlsDiv.appendChild(closeButton);
+  aboutDiv.appendChild(controlsDiv);
+
+  return aboutDiv;
+}
