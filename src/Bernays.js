@@ -146,14 +146,26 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
 });
 
 function updateCursor(event) {
-  const elems = document.getElementsByClassName('alt-detach');
+  const shiftElems = document.getElementsByClassName('bernays');
+  if (event.shiftKey) {
+    for (const elem of shiftElems) {
+      elem.classList.add("move");
+    }
+  }
+  else {
+    for (const elem of shiftElems) {
+      elem.classList.remove("move");
+    }
+  }
+
+  const altElems = document.getElementsByClassName('alt-detach');
   if (event.altKey) {
-    for (const elem of elems) {
+    for (const elem of altElems) {
       elem.classList.add('detach');
     }
   }
   else {
-    for (const elem of elems) {
+    for (const elem of altElems) {
       elem.classList.remove('detach');
     }
   }
@@ -437,6 +449,34 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
   }
 });
 
+interact('.bernays').draggable({
+  manualStart: true,
+  listeners: {
+    move(event) {
+      if (!event.shiftKey) {
+        event.interaction.stop();
+        return;
+      }
+      for (const mainDiv of event.target.querySelectorAll(".main")) {
+        moveMainDiv(mainDiv, event.dx, -event.dy);
+      }
+    },
+    start() {},
+    end() {}
+  }
+}).on('down', function (event) {
+  if (!event.shiftKey) {
+    return;
+  }
+
+  let interaction = event.interaction;
+  if (interaction.pointerIsDown && !interaction.interacting()) {
+    const container = getContainer(event.target);
+    snapshot(container);
+    interaction.start({ name: 'drag' }, event.interactable, event.currentTarget);
+  }
+}).styleCursor(false);
+
 interact('.bernays .new-goal').on('click', function(event) {
   const container = getContainer(event.target);
   container.bernays.showModal();
@@ -501,7 +541,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     container.bernays.counter = 0;
 
-    container.addEventListener("dragenter", function(event) {
+    container.addEventListener("dragenter", function (event) {
       event.stopPropagation();
       event.preventDefault();
       container.bernays.counter++;
@@ -510,12 +550,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    container.addEventListener("dragover", function(event) {
+    container.addEventListener("dragover", function (event) {
       event.preventDefault();
       event.dataTransfer.dropEffect = 'copy';
     });
 
-    container.addEventListener("dragleave", function(event) {
+    container.addEventListener("dragleave", function (event) {
       event.stopPropagation();
       event.preventDefault();
       container.bernays.counter--;
@@ -524,7 +564,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    container.addEventListener("drop", function(event) {
+    container.addEventListener("drop", function (event) {
       event.stopPropagation();
       event.preventDefault();
       container.bernays.counter = 0;

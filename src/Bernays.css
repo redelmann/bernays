@@ -14,6 +14,10 @@
   white-space: nowrap;
 }
 
+.bernays.move {
+  cursor: move;
+}
+
 .bernays .expr, .bernays .rules-menu, .bernays .name {
   font-family: Monaco;
 }
