@@ -539,8 +539,10 @@ window.addEventListener("beforeunload", function () {
   }
 });
 
-window.addEventListener("keyup", function (event) {
-  if ((event.key === "z" || event.key === "Z") && event.ctrlKey) {
+window.addEventListener("keydown", function (event) {
+  const modKey = window.navigator.platform.match(/Mac/i) ? event.metaKey : event.ctrlKey;
+
+  if ((event.key === "z" || event.key === "Z") && modKey) {
     const container = getActiveContainer();
     if (!container || container.querySelector(".current")) {
       return;
