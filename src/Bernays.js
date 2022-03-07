@@ -343,6 +343,10 @@ interact('.bernays .trash').dropzone({
   ondropdeactivate(event) {
     event.target.classList.remove("active");
   }
+}).on('dblclick', function (event) {
+  const container = getContainer(event.target);
+  snapshot(container);
+  clearState(container);
 });
 
 interact('.bernays .rules-menu .item').draggable({

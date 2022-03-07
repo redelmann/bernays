@@ -321,6 +321,7 @@
   z-index: 3;
   text-align: center;
   filter: var(--shadow-filter);
+  cursor: pointer;
 }
 
 .bernays .trash i {
