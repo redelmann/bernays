@@ -102,7 +102,7 @@ export const iffI = {
   hypotheses: [implies(metaVariable("A"), metaVariable("B")), implies(metaVariable("B"), metaVariable("A"))],
   discharge: null,
   conclusion: iff(metaVariable("A"), metaVariable("B"))
-}
+};
 
 export const iffE1 = {
   code: "iffE1",
@@ -110,7 +110,7 @@ export const iffE1 = {
   hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
   discharge: null,
   conclusion: implies(metaVariable("A"), metaVariable("B"))
-}
+};
 
 export const iffE2 = {
   code: "iffE2",
@@ -118,7 +118,7 @@ export const iffE2 = {
   hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
   discharge: null,
   conclusion: implies(metaVariable("B"), metaVariable("A"))
-}
+};
 
 export const notNotE = {
   code: "notNotE",

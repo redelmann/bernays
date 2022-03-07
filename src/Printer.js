@@ -3,29 +3,25 @@ export function pretty(expression) {
 
   function prettyAtom(expr) {
     switch (expr.kind) {
-      case "Variable": {
-        return expr.name;
+    case "Variable":
+      return expr.name;
+    case "MetaVariable":
+      return expr.name;
+    case "Constant":
+      if (expr.value) {
+        return "⊤";
       }
-      case "MetaVariable": {
-        return expr.name;
+      else {
+        return "⊥";
       }
-      case "Constant": {
-        if (expr.value) {
-          return "⊤";
-        }
-        else {
-          return "⊥";
-        }
-      }
-      default: {
-        return "(" + prettyExpr(expr) + ")";
-      }
+    default:
+      return "(" + prettyExpr(expr) + ")";
     }
   }
 
   function prettyNegation(expr) {
     let current = expr;
-    let pre = ""
+    let pre = "";
     while (current.kind === "Not") {
       current = current.inner;
       pre = pre + "¬";
@@ -69,40 +65,40 @@ export function prettyHTML(expr) {
 
   function prettyAtom(expr) {
     switch (expr.kind) {
-      case "Variable": {
-        const varSpan = document.createElement("span");
-        varSpan.classList.add("variable");
-        varSpan.innerText = expr.name;
-        return varSpan;
-      }
-      case "MetaVariable": {
-        const metaVarSpan = document.createElement("span");
-        metaVarSpan.classList.add("metavariable");
-        metaVarSpan.innerText = expr.name;
-        return metaVarSpan;
-      }
-      case "Constant": {
-        const constantSpan = document.createElement("span");
-        constantSpan.classList.add("constant");
-        const constant = expr.value ? "⊤" : "⊥";
-        constantSpan.innerText = constant;
-        return constantSpan;
-      }
-      default: {
-        const parenSpan = document.createElement("span");
-        parenSpan.classList.add("parens");
-        const leftSpan = document.createElement("span");
-        leftSpan.classList.add("parens-left");
-        leftSpan.innerText = "(";
-        parenSpan.appendChild(leftSpan);
-        const childSpan = prettyExpr(expr);
-        parenSpan.appendChild(childSpan);
-        const rightSpan = document.createElement("span");
-        rightSpan.classList.add("parens-right");
-        rightSpan.innerText = ")";
-        parenSpan.appendChild(rightSpan);
-        return parenSpan;
-      }
+    case "Variable": {
+      const varSpan = document.createElement("span");
+      varSpan.classList.add("variable");
+      varSpan.innerText = expr.name;
+      return varSpan;
+    }
+    case "MetaVariable": {
+      const metaVarSpan = document.createElement("span");
+      metaVarSpan.classList.add("metavariable");
+      metaVarSpan.innerText = expr.name;
+      return metaVarSpan;
+    }
+    case "Constant": {
+      const constantSpan = document.createElement("span");
+      constantSpan.classList.add("constant");
+      const constant = expr.value ? "⊤" : "⊥";
+      constantSpan.innerText = constant;
+      return constantSpan;
+    }
+    default: {
+      const parenSpan = document.createElement("span");
+      parenSpan.classList.add("parens");
+      const leftSpan = document.createElement("span");
+      leftSpan.classList.add("parens-left");
+      leftSpan.innerText = "(";
+      parenSpan.appendChild(leftSpan);
+      const childSpan = prettyExpr(expr);
+      parenSpan.appendChild(childSpan);
+      const rightSpan = document.createElement("span");
+      rightSpan.classList.add("parens-right");
+      rightSpan.innerText = ")";
+      parenSpan.appendChild(rightSpan);
+      return parenSpan;
+    }
     }
   }
 
