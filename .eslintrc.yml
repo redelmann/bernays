@@ -11,3 +11,4 @@ rules: {
 }
 ignorePatterns:
   - "webpack.config.js"
+  - "dist/*"
