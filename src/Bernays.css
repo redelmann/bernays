@@ -44,7 +44,11 @@
   line-height: 25px;
 }
 
-.top-menu h1 {
+.bernays.no-menu .top-menu {
+  display: none;
+}
+
+.bernays .top-menu h1 {
   display: inline;
   font-size: 12pt;
   font-weight: bold;
@@ -97,20 +101,17 @@
   margin-left: 10px;
 }
 
-@media (max-width: 670px) {
-  .bernays .top-menu h1 {
-    display: none;
-  }
 
-  .bernays .top-menu .new-goal span, .bernays .top-menu .new-axiom span {
-    display: none;
-  }
+.bernays.s0 .top-menu h1 {
+  display: none;
 }
 
-@media (max-width: 1150px) {
-  .bernays .top-menu .menu-item:not(.new-goal):not(.new-axiom) span {
-    display: none;
-  }
+.bernays.s0 .top-menu .new-goal span, .bernays.s0 .top-menu .new-axiom span {
+  display: none;
+}
+
+.bernays.s1 .top-menu .menu-item:not(.new-goal):not(.new-axiom) span {
+  display: none;
 }
 
 .bernays .tree {
@@ -289,6 +290,7 @@
   padding-left: 10px;
   padding-right: 20px;
   max-height: 100%;
+  pointer-events: none;
 }
 
 .bernays .rules-menu .item {
@@ -314,6 +316,10 @@
 
 .bernays .rules-menu :first-child {
   margin-top: 60px;
+}
+
+.bernays.no-menu .rules-menu :first-child {
+  margin-top: 10px;
 }
 
 .bernays .main:not(.current) .conclusion.detach > div,

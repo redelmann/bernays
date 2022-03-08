@@ -15,12 +15,10 @@
 
 import interact from 'interactjs';
 import {exprEqual} from './Expr.js';
-import {tokenize} from './Tokenizer.js';
-import {parse} from './Parser.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
-import {loadState, saveState, restoreState, saveToFile, loadFromFile, clearState, addState} from './State.js';
+import {loadState, saveState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
 import {moveMainDiv} from './Utils.js';
 import {axiom} from './Rules.js';
@@ -40,7 +38,7 @@ function addGoal(expr, elem) {
   const container = getContainer(elem);
   container.appendChild(exDiv);
   const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
-  const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
+  const y = (container.offsetHeight - exDiv.offsetHeight) / 4;
   moveMainDiv(exDiv, x, y);
 }
 
@@ -50,7 +48,7 @@ function addAxiom(expr, elem) {
   const container = getContainer(elem);
   container.appendChild(exDiv);
   const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
-  const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
+  const y = (container.offsetHeight - exDiv.offsetHeight) / 4;
   moveMainDiv(exDiv, x, y);
 }
 
@@ -370,6 +368,9 @@ interact('.bernays .trash').dropzone({
   const container = getContainer(event.target);
   snapshot(container);
   clearState(container);
+  if(container.bernays.initState) {
+    addState(container, container.bernays.initState);
+  }
 });
 
 interact('.bernays .rules-menu .item').draggable({
@@ -492,6 +493,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const containers = document.getElementsByClassName("bernays");
   
   for (const container of containers) {
+
+    const content = container.innerText;
+    container.innerText = "";
+    let initState = null;
+    try {
+      initState = JSON.parse(content);
+    }
+    catch(e) {
+      console.log("Error parsing initial state: " + e);
+    }
+
     const options = {};
     if (container.hasAttribute('data-include-rules')) {
       options.includeRules = new Set(container.getAttribute('data-include-rules').split(/\s+/));
@@ -500,12 +512,17 @@ document.addEventListener("DOMContentLoaded", function () {
       options.excludeRules = new Set(container.getAttribute('data-exclude-rules').split(/\s+/));
     }
     initUI(container, options);
-    const saved_state = loadState(container);
-    if (saved_state) {
-      restoreState(container, saved_state);
+    container.bernays.initState = initState;
+    const savedState = loadState(container);
+    if (savedState) {
+      addState(container, savedState);
     }
-    else if (container.hasAttribute('data-goal')) {
-      addGoal(parse(tokenize(container.getAttribute('data-goal'))), container);
+    else if (container.bernays.initState) {
+      addState(container, container.bernays.initState);
+    }
+
+    if (container.hasAttribute('data-hide-menu')) {
+      container.classList.add("no-menu");
     }
 
     container.bernays.menu['help'].classList.add('disabled');
@@ -613,6 +630,27 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
     });
+
+    const resizeObserver = new ResizeObserver(function(entries) {
+      for (const entry of entries) {
+        const target = entry.target;
+        const width = target.offsetWidth;
+        if (width > 670) {
+          target.classList.remove('s0');
+        }
+        else {
+          target.classList.add('s0');
+        }
+        if (width > 1150) {
+          target.classList.remove('s1');
+        }
+        else {
+          target.classList.add('s1');
+        }
+      }
+    });
+
+    resizeObserver.observe(container);
   }
 });
 
