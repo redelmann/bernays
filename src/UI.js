@@ -28,6 +28,7 @@ export function initUI(container, options) {
 
   const menuItems = [
     { name: 'new-goal', icon: 'plus' },
+    { name: 'new-axiom', icon: 'asterisk' },
     { name: 'about', icon: 'info-circle' },
     { name: 'help', icon: 'question-circle' },
     { name: 'settings', icon: 'cog' },

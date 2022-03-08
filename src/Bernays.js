@@ -18,11 +18,12 @@ import {exprEqual} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, aboutDialogHTML} from './Render.js';
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, restoreState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
 import {moveMainDiv} from './Utils.js';
+import {axiom} from './Rules.js';
 import './Bernays.css';
 
 function getContainer(elem) {
@@ -35,6 +36,16 @@ function getContainer(elem) {
 
 function addGoal(expr, elem) {
   const exDiv = goalToHTML({ goal: expr }, true);
+  exDiv.classList.add("main");
+  const container = getContainer(elem);
+  container.appendChild(exDiv);
+  const x = (container.offsetWidth - exDiv.offsetWidth) / 2;
+  const y = (container.offsetHeight - exDiv.offsetHeight) / 2;
+  moveMainDiv(exDiv, x, y);
+}
+
+function addAxiom(expr, elem) {
+  const exDiv = treeToHTML(ruleToTree(axiom(expr)), true);
   exDiv.classList.add("main");
   const container = getContainer(elem);
   container.appendChild(exDiv);
@@ -477,22 +488,6 @@ interact('.bernays').draggable({
   }
 }).styleCursor(false);
 
-interact('.bernays .new-goal').on('click', function(event) {
-  const container = getContainer(event.target);
-  container.bernays.showModal();
-  const dialogDiv = newGoalDialogHTML(function(expr) {
-    container.bernays.hideModal();
-    dialogDiv.remove();
-    snapshot(container);
-    addGoal(expr, event.target);
-  }, function() {
-    container.bernays.hideModal();
-    dialogDiv.remove();
-  });
-  container.appendChild(dialogDiv);
-  dialogDiv.bernays.initFocus();
-});
-
 document.addEventListener("DOMContentLoaded", function () {
   const containers = document.getElementsByClassName("bernays");
   
@@ -518,6 +513,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     container.bernays.menu['undo'].classList.add('disabled');
     container.bernays.menu['redo'].classList.add('disabled');
+
+    container.bernays.menu['new-goal'].addEventListener('click', function () {
+      container.bernays.showModal();
+      const dialogDiv = newGoalDialogHTML(function(expr) {
+        container.bernays.hideModal();
+        dialogDiv.remove();
+        snapshot(container);
+        addGoal(expr, container);
+      }, function() {
+        container.bernays.hideModal();
+        dialogDiv.remove();
+      });
+      container.appendChild(dialogDiv);
+      dialogDiv.bernays.initFocus();
+    });
+
+    container.bernays.menu['new-axiom'].addEventListener('click', function () {
+      container.bernays.showModal();
+      const dialogDiv = newAxiomDialogHTML(function(expr) {
+        container.bernays.hideModal();
+        dialogDiv.remove();
+        snapshot(container);
+        addAxiom(expr, container);
+      }, function() {
+        container.bernays.hideModal();
+        dialogDiv.remove();
+      });
+      container.appendChild(dialogDiv);
+      dialogDiv.bernays.initFocus();
+    });
 
     container.bernays.menu['about'].addEventListener('click', function() {
       container.bernays.showModal();

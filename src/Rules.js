@@ -159,6 +159,16 @@ export const raa = {
   conclusion: metaVariable("A")
 };
 
+export function axiom(expr) {
+  return {
+    code: "axiom",
+    name: "AX",
+    hypotheses: [],
+    discharge: null,
+    conclusion: expr
+  };
+}
+
 export const rules = [
   trueI, falseE,
   notI, notE,

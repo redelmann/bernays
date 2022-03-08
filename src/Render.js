@@ -185,6 +185,56 @@ export function newGoalDialogHTML(onValidate, onCancel) {
   return dialogDiv;
 }
 
+export function newAxiomDialogHTML(onValidate, onCancel) {
+  const dialogDiv = document.createElement("div");
+  dialogDiv.classList.add("dialog");
+
+  const titleElem = document.createElement("h1");
+  titleElem.appendChild(document.createTextNode(_("new-axiom")));
+  dialogDiv.appendChild(titleElem);
+
+  const exprInput = exprInputHTML();
+  dialogDiv.appendChild(exprInput);
+
+  dialogDiv.bernays = { initFocus() { exprInput.focus(); } };
+
+  const controlsDiv = document.createElement("div");
+  controlsDiv.classList.add("controls");
+
+  const cancelButton = document.createElement("a");
+  cancelButton.classList.add("cancel");
+  cancelButton.appendChild(document.createTextNode(_("cancel")));
+  cancelButton.addEventListener("click", function() {
+    onCancel();
+  });
+  controlsDiv.appendChild(cancelButton);
+
+  function checkDone() {
+    if (!exprInput.bernays.is_valid) {
+      exprInput.focus();
+      return;
+    }
+    
+    onValidate(exprInput.bernays.expr);
+  }
+
+  const confirmButton = document.createElement("a");
+  confirmButton.classList.add("confirm");
+  confirmButton.appendChild(document.createTextNode(_("add")));
+  confirmButton.addEventListener("click", checkDone);
+  controlsDiv.appendChild(confirmButton);
+
+  dialogDiv.appendChild(controlsDiv);
+
+  exprInput.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+      checkDone(event);
+    }
+  });
+
+  return dialogDiv;
+}
+
 export function replacementsDialogHTML(missing, onValidate, onCancel) {
 
   const replDiv = document.createElement("div");
