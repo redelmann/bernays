@@ -355,34 +355,6 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
   }
 });
 
-interact('.bernays .trash').dropzone({
-  accept: '.main',
-  checker: dropChecker,
-  ondropactivate(event) {
-    event.target.classList.add("active");
-  },
-  ondragenter(event) {
-    event.target.classList.add("over");
-  },
-  ondrop(event) {
-    event.relatedTarget.remove();
-    event.target.classList.remove("over");
-  },
-  ondragleave(event) {
-    event.target.classList.remove("over");
-  },
-  ondropdeactivate(event) {
-    event.target.classList.remove("active");
-  }
-}).on('dblclick', function (event) {
-  const container = getContainer(event.target);
-  snapshot(container);
-  clearState(container);
-  if(container.bernays.initState) {
-    addState(container, container.bernays.initState);
-  }
-});
-
 interact('.bernays .rules-menu .item').draggable({
   manualStart: true,
   listeners: {
@@ -585,6 +557,14 @@ document.addEventListener("DOMContentLoaded", function () {
         dialogDiv.remove();
       });
       container.appendChild(dialogDiv);
+    });
+
+    container.bernays.menu['reset'].addEventListener('click', function() {
+      snapshot(container);
+      clearState(container);
+      if(container.bernays.initState) {
+        addState(container, container.bernays.initState);
+      }
     });
 
     container.bernays.menu['undo'].addEventListener('click', function () { undo(container); });

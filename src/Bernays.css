@@ -329,35 +329,6 @@
   cursor: alias;
 }
 
-.bernays .trash {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  width: 60px;
-  font-size: 30px;
-  height: 60px;
-  background: #F6A8A6;
-  border-radius: var(--border-radius);
-  border: var(--border-size) solid transparent;
-  z-index: 3;
-  text-align: center;
-  box-shadow: var(--box-shadow);
-  cursor: pointer;
-}
-
-.bernays .trash i {
-  vertical-align: middle;
-  line-height: 60px;
-}
-
-.bernays .trash.active {
-  border: var(--border-size) dashed var(--border-color-active);
-}
-
-.bernays .trash.over {
-  filter: brightness(1.3);
-}
-
 .bernays .modal {
   display: none;
   width: 100%;

@@ -32,6 +32,7 @@ export function initUI(container, options) {
     { name: 'about', icon: 'info-circle' },
     { name: 'help', icon: 'question-circle' },
     { name: 'settings', icon: 'cog' },
+    { name: 'reset', icon: 'refresh' },
     null,
     { name: 'undo', icon: 'undo' },
     { name: 'redo', icon: 'repeat' },
@@ -97,13 +98,6 @@ export function initUI(container, options) {
     itemDiv.appendChild(document.createTextNode(rule.name));
     rulesMenuDiv.appendChild(itemDiv);
   }
-
-  const trashDiv = document.createElement("div");
-  trashDiv.classList.add("trash");
-  const trashIcon = document.createElement("i");
-  trashIcon.classList.add("fa", "fa-trash");
-  trashDiv.appendChild(trashIcon);
-  container.appendChild(trashDiv);
 
   const modalDiv = document.createElement("div");
   modalDiv.classList.add("modal");
