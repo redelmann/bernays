@@ -631,23 +631,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const resizeObserver = new ResizeObserver(function(entries) {
       for (const entry of entries) {
         const target = entry.target;
-        const width = target.offsetWidth;
-        if (width > 670) {
-          target.classList.remove('s0');
+        for (let i = 0; i < 3; i++) {
+          target.classList.remove("hide-level-" + i);
         }
-        else {
-          target.classList.add('s0');
-        }
-        if (width > 1150) {
-          target.classList.remove('s1');
-        }
-        else {
-          target.classList.add('s1');
+        for (let i = 2; i >= 0; i--) {
+          const targetWidth = target.offsetWidth;
+          const actualWidth = target.scrollWidth;
+          if (targetWidth < actualWidth) {
+            console.log(i);
+            target.classList.add("hide-level-" + i);
+          }
         }
       }
     });
 
-    resizeObserver.observe(container);
+    resizeObserver.observe(container.querySelector(".top-menu"));
   }
 });
 
@@ -676,3 +674,4 @@ window.addEventListener("keydown", function (event) {
     }
   }
 });
+

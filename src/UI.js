@@ -27,17 +27,17 @@ export function initUI(container, options) {
   topMenuDiv.appendChild(titleElem);
 
   const menuItems = [
-    { name: 'new-goal', icon: 'plus' },
-    { name: 'new-axiom', icon: 'asterisk' },
-    { name: 'about', icon: 'info-circle' },
-    { name: 'help', icon: 'question-circle' },
-    { name: 'settings', icon: 'cog' },
-    { name: 'reset', icon: 'refresh' },
+    { name: 'new-goal', icon: 'plus', level: 0 },
+    { name: 'new-axiom', icon: 'asterisk', level: 0 },
+    { name: 'about', icon: 'info-circle', level: 2 },
+    { name: 'help', icon: 'question-circle', level: 2 },
+    { name: 'settings', icon: 'cog', level: 2 },
+    { name: 'reset', icon: 'refresh', level: 1 },
     null,
-    { name: 'undo', icon: 'undo' },
-    { name: 'redo', icon: 'repeat' },
-    { name: 'save', icon: 'save' },
-    { name: 'load', icon: 'upload' },
+    { name: 'undo', icon: 'undo', level: 1 },
+    { name: 'redo', icon: 'repeat', level: 1 },
+    { name: 'save', icon: 'save', level: 1 },
+    { name: 'load', icon: 'upload', level: 1 },
   ];
 
   const menuDivs = {};
@@ -52,6 +52,7 @@ export function initUI(container, options) {
 
     const menuItemDiv = document.createElement('div');
     menuItemDiv.classList.add('menu-item', item.name);
+    menuItemDiv.classList.add('level-' + item.level);
 
     const iconDiv = document.createElement('i');
     iconDiv.classList.add('fa', 'fa-' + item.icon);
