@@ -425,7 +425,7 @@ export function treeContextualMenuHTML(mainDiv) {
   const freeMetaVariables = freeMetaVariablesInTree(tree);
 
   const specializeItem = document.createElement("a");
-  specializeItem.appendChild(document.createTextNode(_("specialize")));
+  specializeItem.appendChild(document.createTextNode(_("specialize") + "…"));
   if (freeMetaVariables.size === 0) {
     specializeItem.classList.add("disabled");
   }
