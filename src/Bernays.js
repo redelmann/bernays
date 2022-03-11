@@ -16,7 +16,7 @@
 import interact from 'interactjs';
 import {exprEqual} from './Expr.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML, treeContextualMenuHTML} from './Render.js';
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML, treeContextualMenuHTML, containerContextualMenuHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
@@ -275,7 +275,6 @@ interact('.bernays .conclusion.interactive > div, .bernays .goal.interactive, .b
   document.body.appendChild(menu);
   menu.style.left = event.pageX + 'px';
   menu.style.top = event.pageY + 'px';
-  return true;
 });
 
 function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, draggable, draggableElement) {
@@ -459,8 +458,15 @@ interact('.bernays').draggable({
     end() {}
   }
 }).on('contextmenu', function (event) {
+  if (event.currentTarget !== event.target) {
+    return;
+  }
   event.stopPropagation();
   event.preventOriginalDefault();
+  const menu = containerContextualMenuHTML(event.target);
+  document.body.appendChild(menu);
+  menu.style.left = event.pageX + 'px';
+  menu.style.top = event.pageY + 'px';
 }).on('down', function (event) {
   closeContextualMenu();
 
@@ -638,7 +644,6 @@ document.addEventListener("DOMContentLoaded", function () {
           const targetWidth = target.offsetWidth;
           const actualWidth = target.scrollWidth;
           if (targetWidth < actualWidth) {
-            console.log(i);
             target.classList.add("hide-level-" + i);
           }
         }

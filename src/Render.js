@@ -20,7 +20,8 @@ import {pretty, prettyHTML} from './Printer.js';
 import {_} from './Lang.js';
 import {snapshot} from './Undo.js';
 import {getContainer, closeContextualMenu, moveMainDiv} from './Utils.js';
-import { freeMetaVariablesInTree, replaceInTree, setParents } from './Trees.js';
+import {freeMetaVariablesInTree, replaceInTree, setParents} from './Trees.js';
+import {addState, clearState} from './State.js';
 
 export function goalToHTML(subtree, is_interactive) {
   const goalDiv = document.createElement('div');
@@ -460,5 +461,24 @@ export function treeContextualMenuHTML(mainDiv) {
   });
   menuDiv.appendChild(deleteItem);
 
+  return menuDiv;
+}
+
+export function containerContextualMenuHTML(container) {
+  const menuDiv = document.createElement("div");
+  menuDiv.id = 'bernays-contextual-menu';
+  menuDiv.classList.add("contextual-menu");
+
+  const resetItem = document.createElement("a");
+  resetItem.appendChild(document.createTextNode(_("reset")));
+  resetItem.addEventListener("click", function () {
+    snapshot(container);
+    clearState(container);
+    if(container.bernays.initState) {
+      addState(container, container.bernays.initState);
+    }
+    closeContextualMenu();
+  });
+  menuDiv.appendChild(resetItem);
   return menuDiv;
 }
