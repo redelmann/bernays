@@ -239,10 +239,20 @@
   margin-right: 10px;
 }
 
+.bernays .name.interactive {
+  pointer-events: auto;
+  cursor: move;
+}
+
 .bernays .bar {
   background-color: black;
   height: 2px;
   flex-grow: 1;
+}
+
+.bernays .bar.interactive {
+  pointer-events: auto;
+  cursor: move;
 }
 
 .bernays .discharge {
@@ -329,7 +339,9 @@
 .bernays .main:not(.current) .conclusion.detach > div,
 .bernays .main:not(.current) .goal.detach,
 .bernays .main:not(.current).detach,
-.bernays .main:not(.current) .assumption.detach {
+.bernays .main:not(.current) .assumption.detach,
+.bernays .main:not(.current) .name.detach,
+.bernays .main:not(.current) .bar.detach {
   cursor: alias;
 }
 

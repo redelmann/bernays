@@ -177,7 +177,10 @@ document.addEventListener('keydown', updateCursor);
 document.addEventListener('keyup', updateCursor);
 document.addEventListener('visibilitychange', updateCursor);
 
-interact('.bernays .conclusion.interactive > div').draggable({
+interact(
+  '.bernays .conclusion.interactive > div, ' +
+  '.bernays .name.interactive, ' +
+  '.bernays .bar.interactive').draggable({
   manualStart: true,
   listeners: dragMoveListeners,
   modifiers: dragMoveModifiers,
@@ -189,6 +192,12 @@ interact('.bernays .conclusion.interactive > div').draggable({
     snapshot(container);
     if (event.altKey) {
       let elem = event.currentTarget;
+      if (elem.classList.contains("name") || elem.classList.contains("bar")) {
+        while (!elem.classList.contains("tree")) {
+          elem = elem.parentNode;
+        }
+        elem = elem.childNodes[2].childNodes[0];
+      }
       let conclusion_x = elem.offsetLeft;
       while (elem && !elem.classList.contains("tree")) {
         elem = elem.offsetParent;
@@ -262,7 +271,12 @@ interact('.bernays .conclusion.interactive > div').draggable({
   }
 });
 
-interact('.bernays .conclusion.interactive > div, .bernays .goal.interactive, .bernays .assumption.interactive').on('contextmenu', function (event) {
+interact(
+  '.bernays .conclusion.interactive > div, ' + 
+  '.bernays .goal.interactive, ' + 
+  '.bernays .assumption.interactive, ' +
+  '.bernays .bar.interactive, ' + 
+  '.bernays .name.interactive').on('contextmenu', function (event) {
   event.stopPropagation();
   event.preventOriginalDefault();
   closeContextualMenu();

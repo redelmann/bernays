@@ -91,12 +91,18 @@ export function treeToHTML(tree, is_interactive) {
   treeDiv.appendChild(middleDiv);
 
   const nameDiv = document.createElement('div');
-  nameDiv.classList.add("name");
+  nameDiv.classList.add("name", "alt-detach");
   nameDiv.appendChild(document.createTextNode(tree.rule.name));
+  if (is_interactive) {
+    nameDiv.classList.add('interactive');
+  }
   middleDiv.appendChild(nameDiv);
 
   const barDiv = document.createElement('div');
-  barDiv.classList.add("bar");
+  barDiv.classList.add("bar", "alt-detach");
+  if (is_interactive) {
+    barDiv.classList.add('interactive');
+  }
   middleDiv.appendChild(barDiv);
 
   if (tree.discharge) {
