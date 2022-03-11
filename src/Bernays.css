@@ -493,3 +493,28 @@
   margin-left: 2px;
   margin-right: 2px;
 }
+
+#bernays-contextual-menu {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  box-shadow: var(--box-shadow);
+  z-index: 11;
+  background-color: white;
+  font-size: 12pt;
+  font-family: "Helvetia Neue", Arial;
+  border-radius: 5px;
+}
+
+#bernays-contextual-menu a {
+  cursor: pointer;
+  display: block;
+  padding: 5px;
+  user-select: none;
+}
+
+#bernays-contextual-menu a.disabled {
+  color: gray;
+  cursor: not-allowed;
+}

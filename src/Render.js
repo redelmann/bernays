@@ -18,6 +18,9 @@ import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
 import {pretty, prettyHTML} from './Printer.js';
 import {_} from './Lang.js';
+import {snapshot} from './Undo.js';
+import {getContainer, closeContextualMenu, moveMainDiv} from './Utils.js';
+import { freeMetaVariablesInTree, replaceInTree, setParents } from './Trees.js';
 
 export function goalToHTML(subtree, is_interactive) {
   const goalDiv = document.createElement('div');
@@ -235,13 +238,13 @@ export function newAxiomDialogHTML(onValidate, onCancel) {
   return dialogDiv;
 }
 
-export function replacementsDialogHTML(missing, onValidate, onCancel) {
+export function replacementsDialogHTML(metaVariables, onValidate, onCancel) {
 
   const replDiv = document.createElement("div");
   replDiv.classList.add("dialog");
 
   const titleElem = document.createElement("h1");
-  titleElem.appendChild(document.createTextNode(_("choose_replacements")));
+  titleElem.appendChild(document.createTextNode(_("specialize")));
   replDiv.appendChild(titleElem);
 
   const tableElem = document.createElement("table");
@@ -249,7 +252,7 @@ export function replacementsDialogHTML(missing, onValidate, onCancel) {
 
   const exprInputs = [];
 
-  missing.forEach(function(varName) {
+  metaVariables.forEach(function(varName) {
     const rowElem = document.createElement("tr");
     rowElem.classList.add("done");
 
@@ -403,4 +406,59 @@ export function aboutDialogHTML(onClose) {
   aboutDiv.appendChild(controlsDiv);
 
   return aboutDiv;
+}
+
+export function treeContextualMenuHTML(mainDiv) {
+  const menuDiv = document.createElement("div");
+  menuDiv.id = 'bernays-contextual-menu';
+  menuDiv.classList.add("contextual-menu");
+
+  const container = getContainer(mainDiv);
+  const tree = mainDiv.bernays.tree;
+  const freeMetaVariables = freeMetaVariablesInTree(tree);
+
+  const specializeItem = document.createElement("a");
+  specializeItem.appendChild(document.createTextNode(_("specialize")));
+  if (freeMetaVariables.size === 0) {
+    specializeItem.classList.add("disabled");
+  }
+  else {
+    specializeItem.addEventListener("click", function () {
+      closeContextualMenu();
+      container.bernays.showModal();
+      const dialogDiv = replacementsDialogHTML(freeMetaVariables, function(replacements) {
+        snapshot(container);
+        dialogDiv.remove();
+        container.bernays.hideModal();
+        let x = parseFloat(mainDiv.getAttribute('data-x')) || 0;
+        const y = parseFloat(mainDiv.getAttribute('data-y')) || 0;
+        const newTree = replaceInTree(tree, replacements);
+        setParents(newTree);
+        const newDiv = "goal" in newTree ? goalToHTML(newTree, true) : treeToHTML(newTree, true);
+        newDiv.classList.add("main");
+        x += mainDiv.offsetWidth / 2;
+        mainDiv.remove();
+        container.appendChild(newDiv);
+        x -= newDiv.offsetWidth / 2;
+        moveMainDiv(newDiv, x, y);
+      }, function () {
+        dialogDiv.remove();
+        container.bernays.hideModal();
+      });
+      container.appendChild(dialogDiv);
+      dialogDiv.bernays.initFocus();
+    });
+  }
+  menuDiv.appendChild(specializeItem);
+
+  const deleteItem = document.createElement("a");
+  deleteItem.appendChild(document.createTextNode(_("delete")));
+  deleteItem.addEventListener("click", function () {
+    snapshot(container);
+    mainDiv.remove();
+    closeContextualMenu();
+  });
+  menuDiv.appendChild(deleteItem);
+
+  return menuDiv;
 }

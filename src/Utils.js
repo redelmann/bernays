@@ -21,3 +21,18 @@ export function moveMainDiv(div, dx, dy) {
   div.style.left = x + 'px';
   div.style.bottom = y + 'px';
 }
+
+export function getContainer(elem) {
+  let container = elem;
+  while (container !== null && !container.classList.contains("bernays")) {
+    container = container.parentNode;
+  }
+  return container;
+}
+
+export function closeContextualMenu() {
+  const menuDiv = document.getElementById('bernays-contextual-menu');
+  if (menuDiv) {
+    menuDiv.remove();
+  }
+}

@@ -16,21 +16,14 @@
 import interact from 'interactjs';
 import {exprEqual} from './Expr.js';
 import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
-import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML} from './Render.js';
+import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML, treeContextualMenuHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
-import {moveMainDiv} from './Utils.js';
+import {moveMainDiv, getContainer, closeContextualMenu} from './Utils.js';
 import {axiom} from './Rules.js';
 import './Bernays.css';
 
-function getContainer(elem) {
-  let container = elem;
-  while (container !== null && !container.classList.contains("bernays")) {
-    container = container.parentNode;
-  }
-  return container;
-}
 
 function addGoal(expr, elem) {
   const exDiv = goalToHTML({ goal: expr }, true);
@@ -57,6 +50,7 @@ const dragMoveListeners = {
     moveMainDiv(event.target, event.dx, -event.dy);
   },
   start(event) {
+    closeContextualMenu();
     event.target.classList.add("current");
   },
   end(event) {
@@ -90,7 +84,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
   autoScroll: true
 }).on('down', function (event) {
   let interaction = event.interaction;
-  if (interaction.pointerIsDown && !interaction.interacting()) {
+  if (interaction.pointerIsDown && !interaction.interacting() && event.button === 0 && !event.ctrlKey) {
     const container = getContainer(event.currentTarget);
     snapshot(container);
     if (event.altKey) {
@@ -190,7 +184,7 @@ interact('.bernays .conclusion.interactive > div').draggable({
   autoScroll: true
 }).on('down', function(event) {
   let interaction = event.interaction;
-  if (interaction.pointerIsDown && !interaction.interacting()) {
+  if (interaction.pointerIsDown && !interaction.interacting() && event.button === 0 && !event.ctrlKey) {
     const container = getContainer(event.currentTarget);
     snapshot(container);
     if (event.altKey) {
@@ -266,6 +260,22 @@ interact('.bernays .conclusion.interactive > div').draggable({
       }
     }
   }
+});
+
+interact('.bernays .conclusion.interactive > div, .bernays .goal.interactive, .bernays .assumption.interactive').on('contextmenu', function (event) {
+  event.stopPropagation();
+  event.preventOriginalDefault();
+  closeContextualMenu();
+
+  let mainDiv = event.target;
+  while (!mainDiv.classList.contains("main")) {
+    mainDiv = mainDiv.parentNode;
+  }
+  const menu = treeContextualMenuHTML(mainDiv);
+  document.body.appendChild(menu);
+  menu.style.left = event.pageX + 'px';
+  menu.style.top = event.pageY + 'px';
+  return true;
 });
 
 function dropChecker(dragEvent, event, dropped, dropzone, dropzoneElement, draggable, draggableElement) {
@@ -392,7 +402,7 @@ interact('.bernays .rules-menu .item').draggable({
   autoScroll: true
 }).on('down', function (event) {
   let interaction = event.interaction;
-  if (interaction.pointerIsDown && !interaction.interacting()) {
+  if (interaction.pointerIsDown && !interaction.interacting() && event.button === 0 && !event.ctrlKey) {
     const container = getContainer(event.currentTarget);
     snapshot(container);
     const elem = treeToHTML(ruleToTree(event.currentTarget.bernays.rule), true);
@@ -437,7 +447,7 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
   autoScroll: true
 }).on('down', function (event) {
   let interaction = event.interaction;
-  if (interaction.pointerIsDown && !interaction.interacting()) {
+  if (interaction.pointerIsDown && !interaction.interacting() && event.button === 0 && !event.ctrlKey) {
     const container = getContainer(event.currentTarget);
     snapshot(container);
     const tree = { assumption: event.currentTarget.bernays.expr };
@@ -476,13 +486,18 @@ interact('.bernays').draggable({
     start() {},
     end() {}
   }
+}).on('contextmenu', function (event) {
+  event.stopPropagation();
+  event.preventOriginalDefault();
 }).on('down', function (event) {
+  closeContextualMenu();
+
   if (!event.shiftKey) {
     return;
   }
 
   let interaction = event.interaction;
-  if (interaction.pointerIsDown && !interaction.interacting()) {
+  if (interaction.pointerIsDown && !interaction.interacting() && event.button === 0 && !event.ctrlKey) {
     const container = getContainer(event.target);
     snapshot(container);
     interaction.start({ name: 'drag' }, event.interactable, event.currentTarget);
@@ -501,7 +516,9 @@ document.addEventListener("DOMContentLoaded", function () {
       initState = JSON.parse(content);
     }
     catch(e) {
-      console.log("Error parsing initial state: " + e);
+      if (content.trim() !== "") {
+        console.log("Error parsing initial state: " + e);
+      }
     }
 
     const options = {};
