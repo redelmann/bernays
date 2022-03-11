@@ -487,9 +487,18 @@
   display: block;
   padding: 5px;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 #bernays-contextual-menu a.disabled {
   color: gray;
   cursor: not-allowed;
+}
+
+#bernays-contextual-menu hr {
+  width: auto;
+  height: 1px;
+  background-color: #dddddd;
+  border: 0;
+  margin: 3px;
 }

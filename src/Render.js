@@ -452,6 +452,8 @@ export function treeContextualMenuHTML(mainDiv) {
   }
   menuDiv.appendChild(specializeItem);
 
+  menuDiv.appendChild(document.createElement("hr"));
+
   const deleteItem = document.createElement("a");
   deleteItem.appendChild(document.createTextNode(_("delete")));
   deleteItem.addEventListener("click", function () {
