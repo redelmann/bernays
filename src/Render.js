@@ -19,7 +19,7 @@ import {parse} from './Parser.js';
 import {pretty, prettyHTML} from './Printer.js';
 import {_} from './Lang.js';
 import {snapshot} from './Undo.js';
-import {getContainer, closeContextualMenu, moveMainDiv} from './Utils.js';
+import {getContainer, closeContextualMenu, moveMainDiv, playSound} from './Utils.js';
 import {freeMetaVariablesInTree, replaceInTree, setParents} from './Trees.js';
 import {addState, clearState} from './State.js';
 
@@ -465,6 +465,7 @@ export function treeContextualMenuHTML(mainDiv) {
   deleteItem.addEventListener("click", function () {
     snapshot(container);
     mainDiv.remove();
+    playSound('woosh');
     closeContextualMenu();
   });
   menuDiv.appendChild(deleteItem);
@@ -485,6 +486,7 @@ export function containerContextualMenuHTML(container) {
     if(container.bernays.initState) {
       addState(container, container.bernays.initState);
     }
+    playSound('woosh');
     closeContextualMenu();
   });
   menuDiv.appendChild(resetItem);

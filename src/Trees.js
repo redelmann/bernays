@@ -262,3 +262,20 @@ export function getContextDischarges(tree) {
   }
   return res;
 }
+
+export function isComplete(tree) {
+  if ("goal" in tree) {
+    return false;
+  }
+
+  if ("assumption" in tree) {
+    return true;
+  }
+
+  for (const hypothesis of tree.hypotheses) {
+    if (!isComplete(hypothesis)) {
+      return false;
+    }
+  }
+  return true;
+}

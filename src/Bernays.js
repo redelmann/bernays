@@ -15,12 +15,12 @@
 
 import interact from 'interactjs';
 import {exprEqual} from './Expr.js';
-import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal} from './Trees.js'; 
+import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal, isComplete} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML, treeContextualMenuHTML, containerContextualMenuHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, saveToFile, loadFromFile, clearState, addState} from './State.js';
 import {undo, redo, snapshot, cancelSnapshot, getActiveContainer} from './Undo.js';
-import {moveMainDiv, getContainer, closeContextualMenu} from './Utils.js';
+import {moveMainDiv, getContainer, closeContextualMenu, playSound} from './Utils.js';
 import {axiom} from './Rules.js';
 import './Bernays.css';
 
@@ -73,6 +73,9 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
       if (event.target.classList.contains("assumption")) {
         event.target.bernays.scopeDiv.classList.remove("active-scope");
         event.target.bernays.treeDiv.classList.remove("has-current");
+        if (!event.relatedTarget) {
+          playSound('woosh');
+        }
         event.target.remove();
       }
       else {
@@ -88,6 +91,7 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
     const container = getContainer(event.currentTarget);
     snapshot(container);
     if (event.altKey) {
+      playSound('separate');
       const elem = event.currentTarget;
       const tree = elem.bernays.tree;
       const newElem = 'goal' in tree ? goalToHTML(tree, true) : assumptionToHTML(tree, true);
@@ -191,6 +195,7 @@ interact(
     const container = getContainer(event.currentTarget);
     snapshot(container);
     if (event.altKey) {
+      playSound('separate');
       let elem = event.currentTarget;
       if (elem.classList.contains("name") || elem.classList.contains("bar")) {
         while (!elem.classList.contains("tree")) {
@@ -327,7 +332,11 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
     event.target.classList.remove("over");
     const savedValues = event.target.bernays.savedValues;
     if (savedValues) {
+      playSound('pop');
       const newTree = finalizeMergeWithGoal(savedValues);
+      if (isComplete(newTree)) {
+        setTimeout(function () { playSound('success'); }, 400);
+      }
       const newDiv = 'goal' in newTree ? goalToHTML(newTree, true) : treeToHTML(newTree, true);
       newDiv.classList.add("main");
       
@@ -357,6 +366,9 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       dx /= 2;
       updateCursor(event);
       moveMainDiv(newDiv, x + dx, y);
+    }
+    else {
+      playSound('error');
     }
   },
   ondragleave(event) {
@@ -426,6 +438,9 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
       event.target.bernays.scopeDiv.classList.remove("active-scope");
       event.target.bernays.treeDiv.classList.remove("has-current");
       event.target.remove();
+      if (!event.relatedTarget) {
+        playSound('woosh');
+      }
     }
   },
   modifiers: [],
@@ -582,6 +597,7 @@ document.addEventListener("DOMContentLoaded", function () {
     container.bernays.menu['reset'].addEventListener('click', function() {
       snapshot(container);
       clearState(container);
+      playSound('woosh');
       if(container.bernays.initState) {
         addState(container, container.bernays.initState);
       }

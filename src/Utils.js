@@ -36,3 +36,14 @@ export function closeContextualMenu() {
     menuDiv.remove();
   }
 }
+
+export function playSound(name){
+  var audio = document.createElement('audio');
+  audio.style.display = "none";
+  audio.src = name + '.wav';
+  audio.autoplay = true;
+  audio.onended = function () {
+    audio.remove();
+  };
+  document.body.appendChild(audio);
+}
