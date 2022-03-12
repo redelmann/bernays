@@ -332,10 +332,12 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
     event.target.classList.remove("over");
     const savedValues = event.target.bernays.savedValues;
     if (savedValues) {
-      playSound('pop');
       const newTree = finalizeMergeWithGoal(savedValues);
       if (isComplete(newTree)) {
-        setTimeout(function () { playSound('success'); }, 400);
+        playSound('over');
+      }
+      else {
+        playSound('ok');
       }
       const newDiv = 'goal' in newTree ? goalToHTML(newTree, true) : treeToHTML(newTree, true);
       newDiv.classList.add("main");
@@ -368,7 +370,7 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       moveMainDiv(newDiv, x + dx, y);
     }
     else {
-      playSound('error');
+      playSound('not_ok');
     }
   },
   ondragleave(event) {

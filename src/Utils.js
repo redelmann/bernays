@@ -40,7 +40,7 @@ export function closeContextualMenu() {
 export function playSound(name){
   var audio = document.createElement('audio');
   audio.style.display = "none";
-  audio.src = name + '.wav';
+  audio.src = 'sounds/' + name + '.wav';
   audio.autoplay = true;
   audio.onended = function () {
     audio.remove();
