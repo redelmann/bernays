@@ -317,8 +317,16 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
   accept: '.main.tree, .main.assumption, .main.goal',
   checker: dropChecker,
   ondropactivate(event) {
+    if (getContainer(event.target) !== getContainer(event.relatedTarget)) {
+      return;
+    }
     const dropGoal = event.target.bernays.tree;
     const dragTree = event.relatedTarget.bernays.tree;
+    if ("assumption" in dragTree) {
+      if (!event.relatedTarget.bernays.scopeDiv.contains(event.target)) {
+        return;
+      }
+    }
     const savedValues = mergeWithGoal(dragTree, dropGoal);
     if(savedValues) {
       event.target.bernays.savedValues = savedValues;
