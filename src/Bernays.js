@@ -51,9 +51,17 @@ const dragMoveListeners = {
   },
   start(event) {
     closeContextualMenu();
+    const container = getContainer(event.target);
+    container.classList.add("dragging");
+    if (!event.target.bernays) {
+      event.target.bernays = {};
+    }
+    event.target.bernays.container = container;
     event.target.classList.add("current");
   },
   end(event) {
+    const container = getContainer(event.target);
+    container.classList.remove("dragging");
     event.target.classList.remove("current");
   }
 };
@@ -77,6 +85,8 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
           playSound('woosh');
         }
         event.target.remove();
+        const container = getContainer(event.target);
+        container.classList.remove("dragging");
       }
       else {
         dragMoveListeners.end(event);
@@ -416,7 +426,7 @@ interact('.bernays .rules-menu .item').draggable({
     elem.classList.add("main");
     container.appendChild(elem);
 
-    let x = event.currentTarget.offsetWidth / 2;
+    let x = 0;
     let y = container.offsetHeight - event.currentTarget.offsetHeight;
     let current = event.currentTarget;
     while (current !== container) {
@@ -425,10 +435,10 @@ interact('.bernays .rules-menu .item').draggable({
       y += current.scrollTop;
       current = current.offsetParent;
     }
-    
-    const childDiv = elem.childNodes[2].childNodes[0];
-    x -= childDiv.offsetLeft + childDiv.offsetWidth / 2;
 
+    x += 15;
+    y -= 30;
+    
     moveMainDiv(elem, x, y);
 
     interaction.start({ name: 'drag' }, event.interactable, elem);
@@ -442,9 +452,8 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
     start: dragMoveListeners.start,
     end(event) {
       const container = getContainer(event.target);
-      if (container) {
-        cancelSnapshot(container);
-      }
+      cancelSnapshot(container);
+      container.classList.remove("dragging");
       event.target.bernays.scopeDiv.classList.remove("active-scope");
       event.target.bernays.treeDiv.classList.remove("has-current");
       event.target.remove();

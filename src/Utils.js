@@ -23,6 +23,9 @@ export function moveMainDiv(div, dx, dy) {
 }
 
 export function getContainer(elem) {
+  if (elem.bernays && elem.bernays.container) {
+    return elem.bernays.container;
+  }
   let container = elem;
   while (container !== null && !container.classList.contains("bernays")) {
     container = container.parentNode;
