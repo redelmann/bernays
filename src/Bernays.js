@@ -452,12 +452,12 @@ interact('.bernays :not(.current) .discharge.interactive').draggable({
     start: dragMoveListeners.start,
     end(event) {
       const container = getContainer(event.target);
-      cancelSnapshot(container);
       container.classList.remove("dragging");
       event.target.bernays.scopeDiv.classList.remove("active-scope");
       event.target.bernays.treeDiv.classList.remove("has-current");
       event.target.remove();
       if (!event.relatedTarget) {
+        cancelSnapshot(container);
         playSound('woosh');
       }
     }
