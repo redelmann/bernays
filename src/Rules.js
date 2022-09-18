@@ -42,7 +42,7 @@ export const notI = {
 export const notE = {
   code: "notE",
   name: "¬E",
-  hypotheses: [not(metaVariable("a")), metaVariable("A")],
+  hypotheses: [not(metaVariable("a")), metaVariable("a")],
   discharge: null,
   conclusion: constant(false)
 };
