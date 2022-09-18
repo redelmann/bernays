@@ -16,7 +16,7 @@
 import {metaVariable} from './Expr.js';
 import {tokenize} from './Tokenizer.js';
 import {parse} from './Parser.js';
-import {pretty, prettyHTML} from './Printer.js';
+import {pretty, verbosePrettyHTML} from './Printer.js';
 import {_} from './Lang.js';
 import {snapshot} from './Undo.js';
 import {getContainer, closeContextualMenu, moveMainDiv, playSound} from './Utils.js';
@@ -37,7 +37,7 @@ export function goalToHTML(subtree, is_interactive) {
   rightPad.classList.add('pad');
 
   goalDiv.appendChild(leftPad);
-  goalDiv.appendChild(prettyHTML(subtree.goal));
+  goalDiv.appendChild(verbosePrettyHTML(subtree.goal));
   goalDiv.appendChild(rightPad);
   goalDiv.bernays = { tree: subtree };
   return goalDiv;
@@ -54,7 +54,7 @@ export function assumptionToHTML(subtree, is_interactive) {
   const rightPad = document.createElement('span');
   rightPad.appendChild(document.createTextNode(']'));
   assumptionDiv.appendChild(leftPad);
-  assumptionDiv.appendChild(prettyHTML(subtree.assumption));
+  assumptionDiv.appendChild(verbosePrettyHTML(subtree.assumption));
   assumptionDiv.appendChild(rightPad);
   assumptionDiv.bernays = { tree: subtree };
   return assumptionDiv;
@@ -136,7 +136,7 @@ export function treeToHTML(tree, is_interactive) {
   const conclusionInnerDiv = document.createElement('div');
 
   conclusionInnerDiv.appendChild(leftPad);
-  conclusionInnerDiv.appendChild(prettyHTML(tree.conclusion));
+  conclusionInnerDiv.appendChild(verbosePrettyHTML(tree.conclusion));
   conclusionInnerDiv.appendChild(rightPad);
 
   conclusionDiv.appendChild(conclusionInnerDiv);
@@ -265,7 +265,7 @@ export function replacementsDialogHTML(metaVariables, onValidate, onCancel) {
 
     const varElem = document.createElement("td");
     varElem.classList.add("var");
-    varElem.appendChild(prettyHTML(metaVariable(varName)));
+    varElem.appendChild(verbosePrettyHTML(metaVariable(varName)));
     rowElem.appendChild(varElem);
 
     const toElem = document.createElement("td");

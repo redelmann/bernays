@@ -75,6 +75,85 @@ export function pretty(expression) {
   return prettyExpr(expression);
 }
 
+export function verbosePrettyHTML(expr) {
+
+  function parensVerbosePrettyHTML(inner) {
+    if (["And", "Or", "Implies", "Iff"].includes(inner.kind)) {
+      const parenSpan = document.createElement("span");
+      parenSpan.classList.add("parens");
+      const leftSpan = document.createElement("span");
+      leftSpan.classList.add("parens-left");
+      leftSpan.innerText = "(";
+      parenSpan.appendChild(leftSpan);
+      const childSpan = verbosePrettyHTML(inner);
+      parenSpan.appendChild(childSpan);
+      const rightSpan = document.createElement("span");
+      rightSpan.classList.add("parens-right");
+      rightSpan.innerText = ")";
+      parenSpan.appendChild(rightSpan);
+      return parenSpan;
+    }
+    else {
+      return verbosePrettyHTML(inner);
+    }
+  }
+
+  switch (expr.kind) {
+  case "Variable": {
+    const varSpan = document.createElement("span");
+    varSpan.classList.add("variable");
+    varSpan.innerText = expr.name;
+    return varSpan;
+  }
+  case "MetaVariable": {
+    const metaVarSpan = document.createElement("span");
+    metaVarSpan.classList.add("metavariable");
+    metaVarSpan.innerText = expr.name;
+    return metaVarSpan;
+  }
+  case "Constant": {
+    const constantSpan = document.createElement("span");
+    constantSpan.classList.add("constant");
+    const constant = expr.value ? "⊤" : "⊥";
+    constantSpan.innerText = constant;
+    return constantSpan;
+  }
+  case "Not": {
+    const notSpan = document.createElement("span");
+    notSpan.classList.add("unary");
+    
+    const opSpan = document.createElement("span");
+    opSpan.className = "unary-op";
+    opSpan.innerText = "¬";
+
+    notSpan.appendChild(opSpan);
+    notSpan.appendChild(parensVerbosePrettyHTML(expr.inner));
+    return notSpan;
+  }
+  default: {
+    const left = parensVerbosePrettyHTML(expr.left);
+    const right = parensVerbosePrettyHTML(expr.right);
+    const binSpan = document.createElement("span");
+    binSpan.classList.add("binary");
+    binSpan.appendChild(left);
+    binSpan.appendChild(document.createTextNode(" "));
+    const opSpan = document.createElement("span");
+    opSpan.classList.add("binary-op");
+    const ops = {
+      "And": "⋀",
+      "Or": "⋁",
+      "Implies": "⇒",
+      "Iff": "⇔"
+    };
+    opSpan.appendChild(document.createTextNode(ops[expr.kind]));
+    binSpan.appendChild(opSpan);
+    binSpan.appendChild(document.createTextNode(" "));
+    binSpan.appendChild(right);
+    return binSpan;
+  }
+  }
+}
+
 export function prettyHTML(expr) {
 
   function prettyAtom(expr) {

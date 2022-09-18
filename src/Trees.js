@@ -148,8 +148,8 @@ export function freeMetaVariablesInTree(tree) {
 }
 
 function nextName(name) {
-  if (name === 'Z') {
-    return 'X1';
+  if (name === 'z') {
+    return 'p1';
   }
   else if (name.length === 1) {
     return String.fromCharCode(name.charCodeAt(0) + 1);
@@ -172,7 +172,7 @@ function freshenMetaVariablesInTree(tree, otherTree) {
     used.add(treeMetaVar);
   }
   const replacements = {};
-  var next = "A";
+  var next = "a";
   for (const conflict of conflicts) {
     while (used.has(next)) {
       next = nextName(next);

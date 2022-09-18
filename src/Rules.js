@@ -28,21 +28,21 @@ export const falseE = {
   name: "⊥E",
   hypotheses: [constant(false)],
   discharge: null, 
-  conclusion: metaVariable("A")
+  conclusion: metaVariable("a")
 };
 
 export const notI = {
   code: "notI",
   name: "¬I",
   hypotheses: [constant(false)],
-  discharge: metaVariable("A"), 
-  conclusion: not(metaVariable("A"))
+  discharge: metaVariable("a"), 
+  conclusion: not(metaVariable("a"))
 };
 
 export const notE = {
   code: "notE",
   name: "¬E",
-  hypotheses: [not(metaVariable("A")), metaVariable("A")],
+  hypotheses: [not(metaVariable("a")), metaVariable("A")],
   discharge: null,
   conclusion: constant(false)
 };
@@ -50,97 +50,97 @@ export const notE = {
 export const andI = {
   code: "andI",
   name: "⋀I",
-  hypotheses: [metaVariable("A"), metaVariable("B")],
+  hypotheses: [metaVariable("a"), metaVariable("b")],
   discharge: null,
-  conclusion: and(metaVariable("A"), metaVariable("B"))
+  conclusion: and(metaVariable("a"), metaVariable("b"))
 };
 
 export const andE1 = {
   code: "andE1",
   name: "⋀E1",
-  hypotheses: [and(metaVariable("A"), metaVariable("B"))],
+  hypotheses: [and(metaVariable("a"), metaVariable("b"))],
   discharge: null, 
-  conclusion: metaVariable("A")
+  conclusion: metaVariable("a")
 };
 
 export const andE2 = {
   code: "andE2",
   name: "⋀E2",
-  hypotheses: [and(metaVariable("A"), metaVariable("B"))],
+  hypotheses: [and(metaVariable("a"), metaVariable("b"))],
   discharge: null, 
-  conclusion: metaVariable("B")
+  conclusion: metaVariable("b")
 };
 
 export const orI1 = {
   code: "orI1",
   name: "⋁I1",
-  hypotheses: [metaVariable("A")],
+  hypotheses: [metaVariable("a")],
   discharge: null, 
-  conclusion: or(metaVariable("A"), metaVariable("B"))
+  conclusion: or(metaVariable("a"), metaVariable("b"))
 };
 
 export const orI2 = {
   code: "orI2",
   name: "⋁I2",
-  hypotheses: [metaVariable("B")],
+  hypotheses: [metaVariable("b")],
   discharge: null, 
-  conclusion: or(metaVariable("A"), metaVariable("B"))
+  conclusion: or(metaVariable("a"), metaVariable("b"))
 };
 
 export const orE = {
   code: "orE",
   name: "⋁E",
-  hypotheses: [or(metaVariable("A"), metaVariable("B")), implies(metaVariable("A"), metaVariable("C")), implies(metaVariable("B"), metaVariable("C"))],
+  hypotheses: [or(metaVariable("a"), metaVariable("b")), implies(metaVariable("a"), metaVariable("c")), implies(metaVariable("b"), metaVariable("c"))],
   discharge: null, 
-  conclusion: metaVariable("C")
+  conclusion: metaVariable("c")
 };
 
 export const implI = {
   code: "implI",
   name: "⇒I",
-  hypotheses: [metaVariable("B")],
-  discharge: metaVariable("A"), 
-  conclusion: implies(metaVariable("A"), metaVariable("B"))
+  hypotheses: [metaVariable("b")],
+  discharge: metaVariable("a"), 
+  conclusion: implies(metaVariable("a"), metaVariable("b"))
 };
 
 export const implE = {
   code: "implE",
   name: "⇒E",
-  hypotheses: [implies(metaVariable("A"), metaVariable("B")), metaVariable("A")],
+  hypotheses: [implies(metaVariable("a"), metaVariable("b")), metaVariable("a")],
   discharge: null, 
-  conclusion: metaVariable("B")
+  conclusion: metaVariable("b")
 };
 
 export const iffI = {
   code: "iffI",
   name: "⇔I",
-  hypotheses: [implies(metaVariable("A"), metaVariable("B")), implies(metaVariable("B"), metaVariable("A"))],
+  hypotheses: [implies(metaVariable("a"), metaVariable("b")), implies(metaVariable("b"), metaVariable("a"))],
   discharge: null,
-  conclusion: iff(metaVariable("A"), metaVariable("B"))
+  conclusion: iff(metaVariable("a"), metaVariable("b"))
 };
 
 export const iffE1 = {
   code: "iffE1",
   name: "⇔E1",
-  hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
+  hypotheses: [iff(metaVariable("a"), metaVariable("b"))],
   discharge: null,
-  conclusion: implies(metaVariable("A"), metaVariable("B"))
+  conclusion: implies(metaVariable("a"), metaVariable("b"))
 };
 
 export const iffE2 = {
   code: "iffE2",
   name: "⇔E2",
-  hypotheses: [iff(metaVariable("A"), metaVariable("B"))],
+  hypotheses: [iff(metaVariable("a"), metaVariable("b"))],
   discharge: null,
-  conclusion: implies(metaVariable("B"), metaVariable("A"))
+  conclusion: implies(metaVariable("b"), metaVariable("a"))
 };
 
 export const notNotE = {
   code: "notNotE",
   name: "¬¬E",
-  hypotheses: [not(not(metaVariable("A")))],
+  hypotheses: [not(not(metaVariable("a")))],
   discharge: null,
-  conclusion: metaVariable("A")
+  conclusion: metaVariable("a")
 };
 
 export const tnd = {
@@ -148,15 +148,15 @@ export const tnd = {
   name: "TND",
   hypotheses: [],
   discharge: null,
-  conclusion: or(metaVariable("A"), not(metaVariable("A")))
+  conclusion: or(metaVariable("a"), not(metaVariable("a")))
 };
 
 export const raa = {
   code: "raa",
   name: "RAA",
   hypotheses: [constant(false)],
-  discharge: not(metaVariable("A")),
-  conclusion: metaVariable("A")
+  discharge: not(metaVariable("a")),
+  conclusion: metaVariable("a")
 };
 
 export function axiom(expr) {
