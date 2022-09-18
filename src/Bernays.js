@@ -15,7 +15,7 @@
 
 import interact from 'interactjs';
 import {exprEqual} from './Expr.js';
-import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal, isComplete} from './Trees.js'; 
+import {updateSubtree, ruleToTree, updateUndischargedAssumptions, mergeWithGoal, finalizeMergeWithGoal, isComplete, setParents} from './Trees.js'; 
 import {goalToHTML, assumptionToHTML, treeToHTML, newGoalDialogHTML, newAxiomDialogHTML, aboutDialogHTML, treeContextualMenuHTML, containerContextualMenuHTML} from './Render.js';
 import {initUI} from './UI.js';
 import {loadState, saveState, saveToFile, loadFromFile, clearState, addState} from './State.js';
@@ -532,7 +532,6 @@ interact('.bernays').draggable({
 
 document.addEventListener("DOMContentLoaded", function () {
   const containers = document.getElementsByClassName("bernays");
-  
   for (const container of containers) {
 
     const content = container.innerText;
@@ -540,6 +539,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let initState = null;
     try {
       initState = JSON.parse(content);
+      for (const elem of initState) {
+        setParents(elem.tree);
+      }
     }
     catch(e) {
       if (content.trim() !== "") {
