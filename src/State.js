@@ -124,6 +124,9 @@ async function asyncLoadFromFile(container, replace) {
   const string = await file.text();
 
   const elems = JSON.parse(string);
+  for (const elem of elems) {
+    setParents(elem.tree);
+  }
   if (replace) {
     clearState(container);
   }
@@ -140,10 +143,13 @@ function defaultLoadFromFile(container, replace) {
     reader.onload = function () {
       const string = reader.result;
       const elems = JSON.parse(string);
+      for (const elem of elems) {
+        setParents(elem.tree);
+      }
       if (replace) {
         clearState(container);
       }
-      restoreState(container, elems);
+      addState(container, elems);
     };
     reader.readAsText(file);
   };

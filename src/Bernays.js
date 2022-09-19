@@ -680,6 +680,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const file = fileList[i];
         file.text().then(function(text) {
           const state = JSON.parse(text);
+          for (const elem of state) {
+            setParents(elem.tree);
+          }
           addState(container, state);
         });
       }
