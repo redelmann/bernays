@@ -166,7 +166,7 @@
 }
 
 .bernays .hypotheses {
-  margin-left: 30px;
+  margin-left: 80px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -243,7 +243,7 @@
 
 .bernays .name {
   text-align: right;
-  width: 20px;
+  width: 70px;
   flex-grow: 0;
   font-size: 12pt;
   margin-right: 10px;
@@ -290,7 +290,7 @@
 
 .bernays .conclusion {
   margin-top: 5px;
-  margin-left: 30px;
+  margin-left: 80px;
   pointer-events: none;
 }
 
@@ -318,7 +318,7 @@
 }
 
 .bernays .rules-menu .item {
-  width: 50px;
+  width: 75px;
   padding-top: 5px;
   padding-bottom: 5px;
   cursor: move;

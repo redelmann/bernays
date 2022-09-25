@@ -223,8 +223,8 @@ interact(
       const tree = elem.bernays.tree;
       const expr = tree.conclusion;
       const goal = { goal: expr, parent: tree.parent };
-
-      let x = 0;
+      
+      let x = -50;
       let y = container.offsetHeight-elem.offsetHeight;
 
       let current = elem;
@@ -237,10 +237,11 @@ interact(
       let is_naked_goal = false;
       if (tree.parent) {
         updateSubtree(tree.parent, tree, goal);
-        tree.parent = null;
+        delete tree.parent;
       }
       else {
         is_naked_goal = true;
+        delete goal.parent;
       }
 
       updateUndischargedAssumptions(tree);
@@ -373,8 +374,8 @@ interact('.bernays .goal:not(.current .goal)').dropzone({
       let dx = mainDiv.offsetWidth;
 
       if (!mainDiv.classList.contains("tree") && newDiv.classList.contains("tree")) {
-        x -= 30;
-        dx += 30;
+        x -= 80;
+        dx += 80;
         if (newTree.discharge) {
           dx += 60;
         }
@@ -438,7 +439,7 @@ interact('.bernays .rules-menu .item').draggable({
       current = current.offsetParent;
     }
 
-    x += 15;
+    x -= 15;
     y -= 30;
     
     moveMainDiv(elem, x, y);

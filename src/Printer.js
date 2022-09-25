@@ -114,7 +114,7 @@ export function verbosePrettyHTML(expr) {
   case "Constant": {
     const constantSpan = document.createElement("span");
     constantSpan.classList.add("constant");
-    const constant = expr.value ? "⊤" : "⊥";
+    const constant = expr.value ? "vrai" : "faux";
     constantSpan.innerText = constant;
     return constantSpan;
   }
@@ -124,9 +124,10 @@ export function verbosePrettyHTML(expr) {
     
     const opSpan = document.createElement("span");
     opSpan.className = "unary-op";
-    opSpan.innerText = "¬";
+    opSpan.innerText = "non";
 
     notSpan.appendChild(opSpan);
+    notSpan.appendChild(document.createTextNode(" "));
     notSpan.appendChild(parensVerbosePrettyHTML(expr.inner));
     return notSpan;
   }
@@ -140,10 +141,10 @@ export function verbosePrettyHTML(expr) {
     const opSpan = document.createElement("span");
     opSpan.classList.add("binary-op");
     const ops = {
-      "And": "⋀",
-      "Or": "⋁",
-      "Implies": "⇒",
-      "Iff": "⇔"
+      "And": "et",
+      "Or": "ou",
+      "Implies": "implique",
+      "Iff": "ssi"
     };
     opSpan.appendChild(document.createTextNode(ops[expr.kind]));
     binSpan.appendChild(opSpan);
