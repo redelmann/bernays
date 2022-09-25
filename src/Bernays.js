@@ -148,6 +148,8 @@ interact('.bernays .goal.interactive, .bernays .assumption.interactive').draggab
         treeDiv.classList.add("has-current");
       }
 
+      delete tree.parent;
+
       interaction.start({ name: 'drag' }, event.interactable, newElem);
     }
     else {
